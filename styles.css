@@ -1,0 +1,40 @@
+/*CSS responsible for multi-column formatting
+.columns > .left,
+.columns > .middle,
+.columns > .right {
+  float: left;
+  width: 33.33%;
+}*/
+
+/*CSS responsible for dropdown menus*/
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: darkred;
+  width: 100%;
+}
+.dropdown.onFocus:focus-within .dropdown-content {
+  display: block;
+}
+
+.dropdown-content *:hover {
+  background-color: red;
+}
+
+/*CSS for other stuff*/
+#categories {
+  background-color: gray;
+}
+
+#selection {
+  background-color: darkgray;
+}
+
+#summary {
+  background-color: lightgray;
+}
+
