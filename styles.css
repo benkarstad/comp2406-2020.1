@@ -1,11 +1,3 @@
-/*CSS responsible for multi-column formatting
-.columns > .left,
-.columns > .middle,
-.columns > .right {
-  float: left;
-  width: 33.33%;
-}*/
-
 /*CSS responsible for dropdown menus*/
 .dropdown {
   position: relative;
@@ -26,6 +18,9 @@
 }
 
 /*CSS for other stuff*/
+th {
+  font-size: calc(14px + 1.5vw);
+}
 #categories {
   background-color: gray;
 }
