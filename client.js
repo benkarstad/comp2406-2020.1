@@ -281,11 +281,11 @@ function init(){
 	
 	restaurants.forEach((restaurant, index) => {
 		let newElem = document.createElement("p");
-		dropdown.appendChild(newElem);
 		newElem.innerText = restaurant.name;
 		newElem.addEventListener("click", ()=>{
 			selectRestaurant(restaurant)
 		});
+		dropdown.appendChild(newElem);
 	});
 }
 
@@ -293,7 +293,7 @@ function selectRestaurant(restaurant){ //TODO: add prompt when cart data would b
 	//loads the restaurant (i.e. restaurants[index]) onto the main page
 	currentRestaurantObj = restaurant;
 	let categoriesElem = document.getElementById("categories");
-	while(categoriesElem.firstChild) categoriesElem.removeChild(categoriesElem.firstChild); //clear #categories
+	clearNode(categoriesElem);
 	Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
 		let categoryP = document.createElement("p");
 		categoryP.innerText = categoryName;
@@ -307,7 +307,7 @@ function selectRestaurant(restaurant){ //TODO: add prompt when cart data would b
 function selectCategory(category){ //loads the menu items for category
 	currentCategoryObj = currentRestaurantObj.menu[category];
 	let menuElem = document.getElementById("selection");
-	while(menuElem.firstChild) menuElem.removeChild(menuElem.firstChild); //clear #selection
+	clearNode(menuElem);
 	Object.keys(currentCategoryObj).forEach((dish)=>{ //add each dish to the table
 		console.log(dish);
 		dish = currentCategoryObj[dish];
@@ -328,4 +328,8 @@ function selectCategory(category){ //loads the menu items for category
 
 function addToCart(toAdd){
 	//TODO: write function
+}
+
+function clearNode(node){
+	while(node.firstChild) node.removeChild(node.firstChild);
 }
