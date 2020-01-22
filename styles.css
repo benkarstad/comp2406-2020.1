@@ -1,19 +1,28 @@
+:root {
+  --color-1: #881600;
+  --color-2: #4E0110;
+  --color-3: #333232;
+}
+
+
 /*CSS responsible for dropdown menus*/
 .dropdown {
   position: relative;
 }
 
-.dropdown-content {
+.dropdownContent {
   display: none;
   position: absolute;
   background-color: darkred;
   width: 100%;
 }
-.dropdown.onFocus:focus-within .dropdown-content {
+
+.dropdownContent:hover,
+.dropdown.onFocus:focus-within .dropdownContent{
   display: block;
 }
 
-.dropdown-content *:hover {
+.dropdownContent *:hover {
   background-color: red;
 }
 
@@ -21,15 +30,32 @@
 th {
   font-size: calc(14px + 1.5vw);
 }
+
+tbody tr{
+  vertical-align: top;
+}
+
 #categories {
   background-color: gray;
 }
+#categories *:hover{
+  background-color: var(--color-1);
+}
+.categoryCol{
+  width: 20%;
+}
 
-#selection {
-  background-color: darkgray;
+#selection{}
+#selection *:hover{
+  background-color: red;
+}
+.selectionCol{
+  width: auto;
 }
 
 #summary {
   background-color: lightgray;
 }
-
+.summaryCol{
+  width: 25%;
+}

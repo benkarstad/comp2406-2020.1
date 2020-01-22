@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <head>
 	<title>MealMobile</title>
+	<script src="client.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
-<body>
+<body onload="init()">
 	<div id="searchbar" class="dropdown onFocus" style="display: inline-block">
-		<input type="text" id="searchTextbox" placeholder="Search for Restaurants"/>
-		<div class="dropdown-content">
-			<p>Test1</p>
-			<p>Test2</p>
-			<p>Test3</p>
-			<p>Test4</p>
-			<p>Test5</p>
-			<p>Test6</p>
-		</div>
+		<input type="text" id="searchBox" placeholder="Search for Restaurants"/>
+		<div class="dropdownContent"></div>
 	</div>
 	
 	<table style="width: 100%">
 
 		<colgroup>
-			<col style="width: 25%"/>
-			<col style="width: 50%"/>
-			<col style="width: 25%"/>
+			<col class="categoryCol"/>
+			<col class="selectionCol"/>
+			<col class="summaryCol"/>
 		</colgroup>
 
 		<thead>
@@ -43,4 +37,3 @@
 
 	</table>
 </body>
-<script src="client.js"/>

@@ -267,3 +267,65 @@ let frodo = {
 };
 
 let restaurants = [aragorn, legolas, frodo];
+
+let currentRestaurantObj = null;
+let currentCategoryObj = null;
+let currentOrder = [];
+let currentOrderCount = [];
+
+function init(){
+	//load restaurants into searchbar
+	let dropdown = document.getElementById(
+		"searchbar").getElementsByClassName(
+			"dropdownContent").item(0);
+	
+	restaurants.forEach((restaurant, index) => {
+		let newElem = document.createElement("p");
+		dropdown.appendChild(newElem);
+		newElem.innerText = restaurant.name;
+		newElem.addEventListener("click", ()=>{
+			selectRestaurant(restaurant)
+		});
+	});
+}
+
+function selectRestaurant(restaurant){ //TODO: add prompt when cart data would be lost
+	//loads the restaurant (i.e. restaurants[index]) onto the main page
+	currentRestaurantObj = restaurant;
+	let categoriesElem = document.getElementById("categories");
+	while(categoriesElem.firstChild) categoriesElem.removeChild(categoriesElem.firstChild); //clear #categories
+	Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
+		let categoryP = document.createElement("p");
+		categoryP.innerText = categoryName;
+		categoryP.addEventListener("click",()=>{ //make it selectable
+			selectCategory(categoryName);
+		});
+		categoriesElem.appendChild(categoryP)
+	});
+}
+
+function selectCategory(category){ //loads the menu items for category
+	currentCategoryObj = currentRestaurantObj.menu[category];
+	let menuElem = document.getElementById("selection");
+	while(menuElem.firstChild) menuElem.removeChild(menuElem.firstChild); //clear #selection
+	Object.keys(currentCategoryObj).forEach((dish)=>{ //add each dish to the table
+		console.log(dish);
+		dish = currentCategoryObj[dish];
+		console.log(dish);
+		let dishDiv = document.createElement("div");
+		dishDiv.appendChild(document.createElement("p"));
+		dishDiv.lastChild.innerText = dish.name;
+		dishDiv.lastChild.appendChild(document.createElement("span"));
+		dishDiv.lastChild.lastChild.innerText = dish.price;
+		dishDiv.appendChild(document.createElement("p"));
+		dishDiv.lastChild.innerText = dish.description;
+		dishDiv.addEventListener("click",()=>{ //make it selectable
+			addToCart(dish); //TODO: add button to click instead of whole <div>
+		});
+		menuElem.appendChild(dishDiv)
+	});
+}
+
+function addToCart(toAdd){
+	//TODO: write function
+}
