@@ -18,7 +18,7 @@
 }
 
 .dropdownContent:hover,
-.dropdown.onFocus:focus-within .dropdownContent{
+.dropdown.onFocus:focus-within .dropdownContent {
   display: block;
 }
 
@@ -31,31 +31,42 @@ th {
   font-size: calc(14px + 1.5vw);
 }
 
-tbody tr{
+tbody tr {
   vertical-align: top;
 }
 
 #categories {
   background-color: gray;
 }
-#categories *:hover{
+#categories *:hover {
   background-color: var(--color-1);
 }
-.categoryCol{
+.categoryCol {
   width: 20%;
 }
 
-#selection{}
-#selection *:hover{
+#selection {}
+#selection *:hover {
   background-color: red;
 }
-.selectionCol{
+.selectionCol {
   width: auto;
 }
 
 #summary {
   background-color: lightgray;
 }
-.summaryCol{
+#summary div {
+  margin-bottom: 10px;
+}
+#summary div h4 {
+  display: inline;
+}
+.summaryCol {
   width: 25%;
+}
+
+.priceTag {
+  float: right;
+  margin-right: 5%;
 }

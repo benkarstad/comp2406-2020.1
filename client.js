@@ -270,8 +270,10 @@ let restaurants = [aragorn, legolas, frodo];
 
 let currentRestaurantObj = null;
 let currentCategoryObj = null;
-let currentOrder = [];
-let currentOrderCount = [];
+let currentOrder = {
+	items: [],
+	amounts: []
+};
 
 function init(){
 	//load restaurants into searchbar
@@ -279,57 +281,112 @@ function init(){
 		"searchbar").getElementsByClassName(
 			"dropdownContent").item(0);
 	
-	restaurants.forEach((restaurant, index) => {
-		let newElem = document.createElement("p");
-		newElem.innerText = restaurant.name;
-		newElem.addEventListener("click", ()=>{
+	restaurants.forEach((restaurant) => {
+		let newNode = document.createElement("p");
+		newNode.innerText = restaurant.name;
+		newNode.addEventListener("click", ()=>{
 			selectRestaurant(restaurant)
 		});
-		dropdown.appendChild(newElem);
+		dropdown.appendChild(newNode);
 	});
 }
-
-function selectRestaurant(restaurant){ //TODO: add prompt when cart data would be lost
+/*
+* Displays all the categories of the chosen restaurant to the first column.
+* If order data would be lost in changing restaurants, prompts the user for confirmation
+* */
+function selectRestaurant(restaurant){
+	if(currentOrder.items.length != 0 &&
+		(currentRestaurantObj === restaurant || !confirm("Are you sure? You will lose your current order."))){
+		return;
+	}
+	resetPage();
 	//loads the restaurant (i.e. restaurants[index]) onto the main page
 	currentRestaurantObj = restaurant;
-	let categoriesElem = document.getElementById("categories");
-	clearNode(categoriesElem);
+	let categoriesNode = document.getElementById("categories");
+	clearNode(categoriesNode);
 	Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
 		let categoryP = document.createElement("p");
-		categoryP.innerText = categoryName;
+		categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
 		categoryP.addEventListener("click",()=>{ //make it selectable
 			selectCategory(categoryName);
 		});
-		categoriesElem.appendChild(categoryP)
+		categoriesNode.appendChild(categoryP)
 	});
 }
 
-function selectCategory(category){ //loads the menu items for category
+/*
+* adds all the dishes of the selected category, their descriptions and their prices to the center column
+* */
+function selectCategory(category){
 	currentCategoryObj = currentRestaurantObj.menu[category];
-	let menuElem = document.getElementById("selection");
-	clearNode(menuElem);
+	let menuNode = document.getElementById("selection");
+	clearNode(menuNode);
 	Object.keys(currentCategoryObj).forEach((dish)=>{ //add each dish to the table
-		console.log(dish);
 		dish = currentCategoryObj[dish];
-		console.log(dish);
 		let dishDiv = document.createElement("div");
 		dishDiv.appendChild(document.createElement("p"));
-		dishDiv.lastChild.innerText = dish.name;
+		dishDiv.lastChild.innerHTML = "<h3>"+dish.name+"</h3>";
 		dishDiv.lastChild.appendChild(document.createElement("span"));
-		dishDiv.lastChild.lastChild.innerText = dish.price;
+		dishDiv.lastChild.lastChild.innerText = "$"+dish.price;
+		dishDiv.lastChild.lastChild.classList.add("priceTag");
 		dishDiv.appendChild(document.createElement("p"));
-		dishDiv.lastChild.innerText = dish.description;
+		dishDiv.lastChild.innerHTML = "<h5>"+dish.description+"</h5>";
 		dishDiv.addEventListener("click",()=>{ //make it selectable
 			addToCart(dish); //TODO: add button to click instead of whole <div>
 		});
-		menuElem.appendChild(dishDiv)
+		menuNode.appendChild(dishDiv)
 	});
 }
 
+/*
+* increments the count of the selected dish by one, adding it to the list if it isn't there,
+* calls the updateOrder() function
+* */
 function addToCart(toAdd){
-	//TODO: write function
+	if(currentOrder.items.includes(toAdd)) currentOrder.amounts[currentOrder.items.indexOf(toAdd)]++;
+	else{
+		currentOrder.items.push(toAdd);
+		currentOrder.amounts.push(1);
+	}
+	updateOrder();
 }
 
+/*
+* removes all children from the selected node
+* */
 function clearNode(node){
 	while(node.firstChild) node.removeChild(node.firstChild);
+}
+
+/*
+* resets all html and js state to when the page was loaded
+* */
+function resetPage() {
+	clearNode(document.getElementById("categories"));
+	clearNode(document.getElementById("selection"));
+	clearNode(document.getElementById("summary"));
+
+	currentRestaurantObj = null;
+	currentCategoryObj = null;
+	currentOrder.items = [];
+	currentOrder.amounts = [];
+}
+
+/*
+* displays a representation of the ordered items to the user
+* */
+function updateOrder(){
+	let orderNode = document.getElementById("summary");
+	clearNode(orderNode);
+	currentOrder.items.forEach((item, index)=>{
+		let newNode = document.createElement("div");
+		let itemCount = currentOrder.amounts[index];
+		newNode.innerHTML =
+			itemCount + "x<h4>"+item.name+"</h4>";
+		newNode.appendChild(document.createElement("span"));
+		newNode.lastChild.innerText = "$"+itemCount*item.price;
+		newNode.lastChild.classList.add("priceTag");
+		//TODO: add button to remove order items
+		orderNode.appendChild(newNode);
+	});
 }
