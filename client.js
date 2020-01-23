@@ -296,7 +296,8 @@ function init(){
 * */
 function selectRestaurant(restaurant){//TODO: display name, delivery-fee and min-order;
 	if(currentOrder.items.length !== 0 &&
-		(currentRestaurantObj === restaurant || !confirm("Are you sure? You will lose your current order."))){
+		(currentRestaurantObj === restaurant ||
+		!confirm("Are you sure? You will lose your current order."))) {
 		return;
 	}
 	resetPage();
@@ -312,6 +313,11 @@ function selectRestaurant(restaurant){//TODO: display name, delivery-fee and min
 		});
 		categoriesNode.appendChild(categoryP)
 	});
+
+	document.getElementById("restaurantName").innerText = restaurant.name
+	document.getElementById("restaurantInfo").innerHTML =
+		"<h5>Minimum Order: $" + restaurant.min_order+
+		"<br/>Delivery Charge: $" + restaurant.delivery_charge + "</h5>";
 }
 
 /*
@@ -325,14 +331,15 @@ function selectCategory(category){
 		dish = currentCategoryObj[dish];
 		let dishDiv = document.createElement("div");//the div for the whole entry
 		dishDiv.appendChild(document.createElement("h3")); //item name
-		dishDiv.lastChild.innerHTML = dish.name+"<span class='addButton'>&#43;</span>";
+		dishDiv.lastChild.innerHTML = dish.name+"<span class='addButton'>&#43;</span>"; //TODO: replace span with image icon
 		dishDiv.appendChild(document.createElement("span")); //item price
 		dishDiv.lastChild.innerText = "$"+dish.price;
 		dishDiv.lastChild.classList.add("priceTag");
 		dishDiv.appendChild(document.createElement("p")); //item description
 		dishDiv.lastChild.innerHTML = "<h5>"+dish.description+"</h5>";
-		dishDiv.getElementsByClassName("addButton").item(0).addEventListener("click",()=>{ //make it selectable
-			addToCart(dish);
+		dishDiv.getElementsByClassName("addButton").item(0)
+			.addEventListener("click",()=>{ //make it selectable
+				addToCart(dish);
 		});
 		menuNode.appendChild(dishDiv)
 	});
