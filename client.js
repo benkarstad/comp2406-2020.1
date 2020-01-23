@@ -294,8 +294,8 @@ function init(){
 * Displays all the categories of the chosen restaurant to the first column.
 * If order data would be lost in changing restaurants, prompts the user for confirmation
 * */
-function selectRestaurant(restaurant){
-	if(currentOrder.items.length != 0 &&
+function selectRestaurant(restaurant){//TODO: display name, delivery-fee and min-order;
+	if(currentOrder.items.length !== 0 &&
 		(currentRestaurantObj === restaurant || !confirm("Are you sure? You will lose your current order."))){
 		return;
 	}
@@ -323,16 +323,16 @@ function selectCategory(category){
 	clearNode(menuNode);
 	Object.keys(currentCategoryObj).forEach((dish)=>{ //add each dish to the table
 		dish = currentCategoryObj[dish];
-		let dishDiv = document.createElement("div");
-		dishDiv.appendChild(document.createElement("p"));
-		dishDiv.lastChild.innerHTML = "<h3>"+dish.name+"</h3>";
-		dishDiv.lastChild.appendChild(document.createElement("span"));
-		dishDiv.lastChild.lastChild.innerText = "$"+dish.price;
-		dishDiv.lastChild.lastChild.classList.add("priceTag");
-		dishDiv.appendChild(document.createElement("p"));
+		let dishDiv = document.createElement("div");//the div for the whole entry
+		dishDiv.appendChild(document.createElement("h3")); //item name
+		dishDiv.lastChild.innerHTML = dish.name+"<span class='addButton'>&#43;</span>";
+		dishDiv.appendChild(document.createElement("span")); //item price
+		dishDiv.lastChild.innerText = "$"+dish.price;
+		dishDiv.lastChild.classList.add("priceTag");
+		dishDiv.appendChild(document.createElement("p")); //item description
 		dishDiv.lastChild.innerHTML = "<h5>"+dish.description+"</h5>";
-		dishDiv.addEventListener("click",()=>{ //make it selectable
-			addToCart(dish); //TODO: add button to click instead of whole <div>
+		dishDiv.getElementsByClassName("addButton").item(0).addEventListener("click",()=>{ //make it selectable
+			addToCart(dish);
 		});
 		menuNode.appendChild(dishDiv)
 	});

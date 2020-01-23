@@ -27,18 +27,17 @@
 }
 
 /*CSS for other stuff*/
-th {
-  font-size: calc(14px + 1.5vw);
-}
 
-tbody tr {
-  vertical-align: top;
+.addButton,
+.priceTag {
+  float: right;
+  margin-right: 5%;
 }
 
 #categories {
   background-color: gray;
 }
-#categories *:hover {
+#categories p:hover {
   background-color: var(--color-1);
 }
 .categoryCol {
@@ -66,7 +65,17 @@ tbody tr {
   width: 25%;
 }
 
-.priceTag {
-  float: right;
-  margin-right: 5%;
+th {
+  font-size: calc(14px + 1.5vw);
+}
+
+tbody tr {
+  vertical-align: top;
+}
+
+.addButton,
+.addButton:hover{
+  background-color: limegreen;
+  padding: 7px;
+  border-radius: 50%;
 }
