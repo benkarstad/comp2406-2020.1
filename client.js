@@ -266,6 +266,8 @@ let frodo = {
 	}
 };
 
+//TODO: separate restaurant data into a .JSON file
+
 let restaurants = [aragorn, legolas, frodo];
 
 let currentRestaurantObj = null;
@@ -314,10 +316,10 @@ function selectRestaurant(restaurant){//TODO: display name, delivery-fee and min
 		categoriesNode.appendChild(categoryP)
 	});
 
-	document.getElementById("restaurantName").innerText = restaurant.name
+	document.getElementById("restaurantName").innerText = restaurant.name;
 	document.getElementById("restaurantInfo").innerHTML =
-		"<h5>Minimum Order: $" + restaurant.min_order+
-		"<br/>Delivery Charge: $" + restaurant.delivery_charge + "</h5>";
+		`<h5>Minimum Order: \$${restaurant.min_order}<br/>
+Delivery Charge: \$${restaurant.delivery_charge}</h5>`;
 }
 
 /*
@@ -331,15 +333,14 @@ function selectCategory(category){
 		dish = currentCategoryObj[dish];
 		let dishDiv = document.createElement("div");//the div for the whole entry
 		dishDiv.appendChild(document.createElement("h3")); //item name
-		dishDiv.lastChild.innerHTML = dish.name+"<span class='addButton'>&#43;</span>"; //TODO: replace span with image icon
+		dishDiv.lastChild.innerHTML = `${dish.name}<span class='addButton'>&#43;</span>`; //TODO: replace span with image icon
 		dishDiv.appendChild(document.createElement("span")); //item price
-		dishDiv.lastChild.innerText = "$"+dish.price;
+		dishDiv.lastChild.innerText = `\$${dish.price}`;
 		dishDiv.lastChild.classList.add("priceTag");
 		dishDiv.appendChild(document.createElement("p")); //item description
-		dishDiv.lastChild.innerHTML = "<h5>"+dish.description+"</h5>";
-		dishDiv.getElementsByClassName("addButton").item(0)
-			.addEventListener("click",()=>{ //make it selectable
-				addToCart(dish);
+		dishDiv.lastChild.innerHTML = `<h5>${dish.description}</h5>`;
+		dishDiv.getElementsByClassName("addButton").item(0).addEventListener("click",()=>{ //make it selectable
+			addToCart(dish);
 		});
 		menuNode.appendChild(dishDiv)
 	});
@@ -388,10 +389,9 @@ function updateOrder(){
 	currentOrder.items.forEach((item, index)=>{
 		let newNode = document.createElement("div");
 		let itemCount = currentOrder.amounts[index];
-		newNode.innerHTML =
-			itemCount + "x<h4>"+item.name+"</h4>";
+		newNode.innerHTML = `${itemCount}x<h4>${item.name}</h4>`;
 		newNode.appendChild(document.createElement("span"));
-		newNode.lastChild.innerText = "$"+itemCount*item.price;
+		newNode.lastChild.innerText = `\$${itemCount*item.price}`;
 		newNode.lastChild.classList.add("priceTag");
 		//TODO: add button to remove order items
 		orderNode.appendChild(newNode);
