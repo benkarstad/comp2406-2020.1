@@ -26,11 +26,16 @@
   background-color: red;
 }
 
-/*CSS for other stuff*/
+/*CSS for other stuff*/ /*TODO: add reactive styling to accomodate for varied screen sizes*/
+
+.addButton {
+  width: 24px;
+  height: 24px;
+}
 
 .addButton,
 .priceTag {
-  float: right;
+float: right;
   margin-right: 5%;
 }
 

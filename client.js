@@ -266,7 +266,10 @@ let frodo = {
 	}
 };
 
-//TODO: separate restaurant data into a .JSON file
+//TODO: separate restaurant data into a .JSON file ^
+
+const addImg = "add.png";
+const removeImg = "remove.png";
 
 let restaurants = [aragorn, legolas, frodo];
 
@@ -333,7 +336,7 @@ function selectCategory(category){
 		dish = currentCategoryObj[dish];
 		let dishDiv = document.createElement("div");//the div for the whole entry
 		dishDiv.appendChild(document.createElement("h3")); //item name
-		dishDiv.lastChild.innerHTML = `${dish.name}<span class='addButton'>&#43;</span>`; //TODO: replace span with image icon
+		dishDiv.lastChild.innerHTML = `${dish.name}<img class='addButton' src="${addImg}" alt="Add Item">`; //TODO: replace span with image icon
 		dishDiv.appendChild(document.createElement("span")); //item price
 		dishDiv.lastChild.innerText = `\$${dish.price}`;
 		dishDiv.lastChild.classList.add("priceTag");
