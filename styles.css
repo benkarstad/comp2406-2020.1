@@ -52,13 +52,13 @@
   width: auto;
 }
 
-#summary {
+#order {
   background-color: lightgray;
 }
-#summary div {
+#order div {
   margin-bottom: 10px;
 }
-#summary div h4 {
+#order div h4 {
   display: inline;
 }
 .summaryCol {

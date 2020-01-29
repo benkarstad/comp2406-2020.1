@@ -283,7 +283,7 @@ function init(){
 		"searchbar").getElementsByClassName(
 			"dropdownContent").item(0);
 	
-	restaurants.forEach((restaurant) => {
+	restaurants.forEach((restaurant)=>{
 		let newNode = document.createElement("p");
 		newNode.innerText = restaurant.name;
 		newNode.addEventListener("click", ()=>{
@@ -296,7 +296,7 @@ function init(){
 * Displays all the categories of the chosen restaurant to the first column.
 * If order data would be lost in changing restaurants, prompts the user for confirmation
 * */
-function selectRestaurant(restaurant){//TODO: display name, delivery-fee and min-order;
+function selectRestaurant(restaurant){
 	if(currentOrder.items.length !== 0 &&
 		(currentRestaurantObj === restaurant ||
 		!confirm("Are you sure? You will lose your current order."))) {
@@ -360,7 +360,7 @@ function addToCart(toAdd){
 }
 
 /*
-* removes all children from the selected node
+* executes order 66
 * */
 function clearNode(node){
 	while(node.firstChild) node.removeChild(node.firstChild);
@@ -372,7 +372,7 @@ function clearNode(node){
 function resetPage() {
 	clearNode(document.getElementById("categories"));
 	clearNode(document.getElementById("selection"));
-	clearNode(document.getElementById("summary"));
+	clearNode(document.getElementById("order"));
 
 	currentRestaurantObj = null;
 	currentCategoryObj = null;
@@ -384,7 +384,7 @@ function resetPage() {
 * displays a representation of the ordered items to the user
 * */
 function updateOrder(){
-	let orderNode = document.getElementById("summary");
+	let orderNode = document.getElementById("order");
 	clearNode(orderNode);
 	currentOrder.items.forEach((item, index)=>{
 		let newNode = document.createElement("div");
