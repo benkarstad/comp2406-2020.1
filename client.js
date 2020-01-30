@@ -296,6 +296,7 @@ function init(){
 		dropdown.appendChild(newNode);
 	});
 }
+
 /*
 * Displays all the categories of the chosen restaurant to the first column.
 * If order data would be lost in changing restaurants, prompts the user for confirmation
@@ -341,7 +342,7 @@ function selectCategory(category){
 		dishDiv.appendChild(document.createElement("h3")); //item name
 		dishDiv.lastChild.innerHTML = `${dish.name}<img class='addButton' src="${addImg}" alt="Add Item">`;
 		dishDiv.appendChild(document.createElement("span")); //item price
-		dishDiv.lastChild.innerText = `\$${dish.price}`;
+		dishDiv.lastChild.innerText = `\$${dish.price.toFixed(2)}`;
 		dishDiv.lastChild.classList.add("priceTag");
 		dishDiv.appendChild(document.createElement("p")); //item description
 		dishDiv.lastChild.innerHTML = `<h5>${dish.description}</h5>`;
@@ -403,7 +404,6 @@ function resetPage() {
 
 /*
 * displays a representation of the ordered items to the user
-* TODO: Display orders to only two decimal places
 * TODO: Have the submit button work only if the order meets the minimum, otherwise add a prompt for how much is owed.
 * */
 function updateOrder(){
@@ -415,7 +415,7 @@ function updateOrder(){
 		let itemCount = currentOrder.amounts[index];
 		newNode.innerHTML = `${itemCount}x<h4>${item.name}</h4>`;
 		newNode.appendChild(document.createElement("span"));
-		newNode.lastChild.innerText = `\$${itemCount*item.price}`;
+		newNode.lastChild.innerText = `\$${parseFloat(itemCount*item.price).toFixed(2)}`;
 		newNode.lastChild.classList.add("priceTag");
 		newNode.appendChild(document.createElement("img"));
 		newNode.lastChild.classList.add("removeButton");
@@ -424,14 +424,18 @@ function updateOrder(){
 		newNode.lastChild.addEventListener("click", ()=>{
 			addToCart(item, -1);
 		});
-		//TODO: add button to remove order items
+
 		orderNode.appendChild(newNode);
 	}); //add all ordered items to #order
 	
 	//update #orderSummary
-	//let summaryNode = document.getElementById("orderSummary");
-	document.getElementById("subtotal").getElementsByClassName("priceTag")[0].innerText = `\$${currentOrder.subtotal}`;
-	document.getElementById("taxes").getElementsByClassName("priceTag")[0].innerText = `\$${0.1*currentOrder.subtotal}`;
-	document.getElementById("deliveryFee").getElementsByClassName("priceTag")[0].innerText = `\$${currentRestaurantObj.delivery_charge}`;
-	document.getElementById("total").getElementsByClassName("priceTag")[0].innerText = `\$${1.1*currentOrder.subtotal+currentRestaurantObj.delivery_charge}`;
+	let subtotal = currentOrder.subtotal.toFixed(2);
+	let taxes = (0.1*subtotal).toFixed(2);
+	let deliveryFee = currentRestaurantObj.delivery_charge.toFixed(2);
+	let total = parseFloat(subtotal+taxes+deliveryFee).toFixed(2);
+
+	document.getElementById("subtotal").getElementsByClassName("priceTag")[0].innerText = `\$${subtotal}`;
+	document.getElementById("taxes").getElementsByClassName("priceTag")[0].innerText = `\$${taxes}`;
+	document.getElementById("deliveryFee").getElementsByClassName("priceTag")[0].innerText = `\$${deliveryFee}`;
+	document.getElementById("total").getElementsByClassName("priceTag")[0].innerText = `\$${total}`;
 }
