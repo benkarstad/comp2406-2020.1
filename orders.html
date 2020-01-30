@@ -6,7 +6,7 @@
 </head>
 
 <body onload="init()">
-	<div id="searchbar" class="dropdown onFocus" style="display: inline-block">
+	<div id="searchbar" class="dropdown onFocus" style="display: inline-block; ">
 		<input type="text" id="searchBox" placeholder="Search for Restaurants"/>
 		<div class="dropdownContent"></div>
 	</div>
@@ -16,7 +16,7 @@
 		<colgroup>
 			<col class="categoryCol"/>
 			<col class="selectionCol"/>
-			<col class="summaryCol"/>
+			<col class="orderCol"/>
 		</colgroup>
 
 		<thead>
@@ -32,13 +32,19 @@
 		</thead>
 
 		<tbody>
-		<tr style="height: 640px">
+		<tr>
 			<td rowspan="2" id="categories"></td>
 			<td rowspan="2" id="selection"></td>
 			<td rowspan="1" id="order"></td>
 		</tr>
 		<tr>
-			<td>Order Summary:</td>
+			<td id="orderSummary"> <!--TODO: Add a 'submit order' button-->
+				<h3>Order Summary:</h3>
+				<p id="subtotal">Subtotal:<span class="priceTag">$0</span></p>
+				<p id="taxes">Tax:<span class="priceTag">$0</span></p>
+				<p id="deliveryFee">Delivery Fee:<span class="priceTag">$0</span></p>
+				<p id="total">Total:<span class="priceTag">$0</span></p>
+			</td>
 		</tr>
 		</tbody>
 

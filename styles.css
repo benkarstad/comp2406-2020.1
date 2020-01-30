@@ -26,17 +26,13 @@
   background-color: red;
 }
 
-/*CSS for other stuff*/ /*TODO: add reactive styling to accomodate for varied screen sizes*/
-
-.addButton {
-  width: 24px;
-  height: 24px;
+/*CSS for the table*/
+th {
+  font-size: calc(14px + 1.5vw);
 }
 
-.addButton,
-.priceTag {
-float: right;
-  margin-right: 5%;
+tbody tr {
+  vertical-align: top;
 }
 
 #categories {
@@ -66,21 +62,28 @@ float: right;
 #order div h4 {
   display: inline;
 }
-.summaryCol {
+.orderCol {
   width: 25%;
 }
 
-th {
-  font-size: calc(14px + 1.5vw);
+#orderSummary {}
+
+#deliveryFee {
+  border-bottom: 1px solid #333232;
+  padding-bottom: 3px;
 }
 
-tbody tr {
-  vertical-align: top;
-}
+/*CSS for other stuff*/ /*TODO: add reactive styling to accomodate for varied screen sizes*/
 
 .addButton,
-.addButton:hover{
-  background-color: limegreen;
-  padding: 7px;
-  border-radius: 50%;
+.removeButton {
+  width: 24px;
+  height: 24px;
+}
+
+.priceTag,
+.addButton,
+.removeButton{
+  float: right;
+  margin-right: 5%;
 }
