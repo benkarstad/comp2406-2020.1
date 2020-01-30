@@ -273,6 +273,19 @@ const removeImg = "remove.png";
 
 let restaurants = [aragorn, legolas, frodo];
 
+let htmlNodes = {
+	categories: document.getElementById("categories"),
+	restaurantName: document.getElementById("restaurantName"),
+	restaurantInfo: document.getElementById("restaurantInfo"),
+	selection: document.getElementById("selection"),
+	order: document.getElementById("order"),
+	subtotal: document.getElementById("subtotal"),
+	taxes: document.getElementById("taxes"),
+	deliveryFee: document.getElementById("deliveryFee"),
+	total: document.getElementById("total")
+	
+};
+
 let currentRestaurantObj = null;
 let currentCategoryObj = null;
 let currentOrder = {
@@ -302,13 +315,14 @@ function init(){
 * If order data would be lost in changing restaurants, prompts the user for confirmation
 * */
 function selectRestaurant(restaurant){
-	if(currentOrder.items.length !== 0 &&
+	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
 		(currentRestaurantObj === restaurant ||
 		!confirm("Are you sure? You will lose your current order."))) {
 		return;
 	}
 	resetPage();
-	//loads the restaurant (i.e. restaurants[index]) onto the main page
+	
+	//loads the restaurant content (i.e. restaurants[index]) onto the main page
 	currentRestaurantObj = restaurant;
 	let categoriesNode = document.getElementById("categories");
 	clearNode(categoriesNode);
@@ -326,7 +340,7 @@ function selectRestaurant(restaurant){
 		`<h5>Minimum Order: \$${restaurant.min_order}<br/>`+
 		`Delivery Charge: \$${restaurant.delivery_charge}</h5>`;
 	
-	updateOrder();
+	update();
 }
 
 /*
@@ -355,7 +369,7 @@ function selectCategory(category){
 
 /*
 * increments the count of the selected dish by one, adding it to the list if it isn't there,
-* calls the updateOrder() function
+* calls the update() function
 * */
 function addToCart(toAdd, amount){
 	if(amount === 0) return;
@@ -377,7 +391,7 @@ function addToCart(toAdd, amount){
 	
 	currentOrder.subtotal += toAdd.price*amount; //update the subtotal to reflect this
 	
-	updateOrder();
+	update();
 }
 
 /*
@@ -406,7 +420,7 @@ function resetPage() {
 * displays a representation of the ordered items to the user
 * TODO: Have the submit button work only if the order meets the minimum, otherwise add a prompt for how much is owed.
 * */
-function updateOrder(){
+function update(){
 	//update #order
 	let orderNode = document.getElementById("order");
 	clearNode(orderNode);
@@ -432,7 +446,7 @@ function updateOrder(){
 	let subtotal = currentOrder.subtotal.toFixed(2);
 	let taxes = (0.1*subtotal).toFixed(2);
 	let deliveryFee = currentRestaurantObj.delivery_charge.toFixed(2);
-	let total = parseFloat(subtotal+taxes+deliveryFee).toFixed(2);
+	let total = parseFloat(parseFloat(subtotal)+parseFloat(taxes)+parseFloat(deliveryFee)).toFixed(2);
 
 	document.getElementById("subtotal").getElementsByClassName("priceTag")[0].innerText = `\$${subtotal}`;
 	document.getElementById("taxes").getElementsByClassName("priceTag")[0].innerText = `\$${taxes}`;

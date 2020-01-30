@@ -73,6 +73,25 @@ tbody tr {
   padding-bottom: 3px;
 }
 
+#submitButton {
+    width: 66%;
+    height: 10vh;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 3vh;
+
+    color: darkgreen;
+    background-color: lightgreen;
+}
+#submitButton.nsf{
+    color: black;
+    background-color: lightcoral;
+}
+#submitButton.noneSelected{
+    color: white;
+    background-color: black;
+}
+
 /*CSS for other stuff*/ /*TODO: add reactive styling to accomodate for varied screen sizes*/
 
 .addButton,
