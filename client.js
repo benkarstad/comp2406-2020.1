@@ -267,24 +267,12 @@ let frodo = {
 };
 
 //TODO: separate restaurant data into a .JSON file ^
+//TODO: Use better for/forEach conventions.
 
 const addImg = "add.png";
 const removeImg = "remove.png";
 
 let restaurants = [aragorn, legolas, frodo];
-
-let htmlNodes = {
-	categories: document.getElementById("categories"),
-	restaurantName: document.getElementById("restaurantName"),
-	restaurantInfo: document.getElementById("restaurantInfo"),
-	selection: document.getElementById("selection"),
-	order: document.getElementById("order"),
-	subtotal: document.getElementById("subtotal"),
-	taxes: document.getElementById("taxes"),
-	deliveryFee: document.getElementById("deliveryFee"),
-	total: document.getElementById("total")
-	
-};
 
 let currentRestaurantObj = null;
 let currentCategoryObj = null;
@@ -308,6 +296,8 @@ function init(){
 		});
 		dropdown.appendChild(newNode);
 	});
+	
+	document.getElementById("submitButton").addEventListener("click", order)
 }
 
 /*
@@ -452,4 +442,34 @@ function update(){
 	document.getElementById("taxes").getElementsByClassName("priceTag")[0].innerText = `\$${taxes}`;
 	document.getElementById("deliveryFee").getElementsByClassName("priceTag")[0].innerText = `\$${deliveryFee}`;
 	document.getElementById("total").getElementsByClassName("priceTag")[0].innerText = `\$${total}`;
+	
+	if(currentRestaurantObj === null){
+		htmlNodes.submitButton.classList.add("noneSelected");
+		htmlNodes.submitButton.innerText = "Please Select a Restaurant"
+	}
+	else{
+			document.getElementById("submitButton").classList.remove("noneSelected");
+			if(subtotal >= currentRestaurantObj.min_order)
+			{
+				document.getElementById("submitButton").classList.remove("nsf");
+				document.getElementById("submitButton").innerText = "Order Now!";
+			}
+			else
+			{
+				document.getElementById("submitButton").classList.add("nsf");
+				document.getElementById("submitButton").innerHTML = `You are \$${parseFloat(currentRestaurantObj.min_order - subtotal).toFixed(2)} short ;~;</br>Please Order More`;
+			}
+	}
+}
+
+function order(){
+	if(currentRestaurantObj === null){
+		alert("No Restaurant Selected");
+	}
+	else if(currentOrder.subtotal >= currentRestaurantObj.min_order){ //submit the order
+		//TODO: Add code to submit the order
+	}
+	else{
+		alert(`Please order at least \$${currentRestaurantObj.min_order} to submit`);
+	}
 }
