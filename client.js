@@ -395,9 +395,17 @@ function clearNode(node){
 * resets all html and js state to when the page was loaded
 * */
 function resetPage() {
+	
+	clearNode(document.getElementById("restaurantName"));
+	clearNode(document.getElementById("restaurantInfo"));
 	clearNode(document.getElementById("categories"));
 	clearNode(document.getElementById("selection"));
 	clearNode(document.getElementById("order"));
+	
+	document.getElementById("subtotal").getElementsByClassName("priceTag")[0].innerText = "$0.00";
+	document.getElementById("taxes").getElementsByClassName("priceTag")[0].innerText = "$0.00";
+	document.getElementById("deliveryFee").getElementsByClassName("priceTag")[0].innerText = "$0.00";
+	document.getElementById("total").getElementsByClassName("priceTag")[0].innerText = "$0.00";
 
 	currentRestaurantObj = null;
 	currentCategoryObj = null;
@@ -467,7 +475,8 @@ function order(){
 		alert("No Restaurant Selected");
 	}
 	else if(currentOrder.subtotal >= currentRestaurantObj.min_order){ //submit the order
-		//TODO: Add code to submit the order
+		alert("Order Submitted");
+		resetPage();
 	}
 	else{
 		alert(`Please order at least \$${currentRestaurantObj.min_order} to submit`);
