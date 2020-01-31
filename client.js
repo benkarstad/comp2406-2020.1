@@ -444,8 +444,8 @@ function update(){
 	document.getElementById("total").getElementsByClassName("priceTag")[0].innerText = `\$${total}`;
 	
 	if(currentRestaurantObj === null){
-		htmlNodes.submitButton.classList.add("noneSelected");
-		htmlNodes.submitButton.innerText = "Please Select a Restaurant"
+		document.getElementById("submitButton").classList.add("noneSelected");
+		document.getElementById("submitButton").innerText = "Please Select a Restaurant"
 	}
 	else{
 			document.getElementById("submitButton").classList.remove("noneSelected");
