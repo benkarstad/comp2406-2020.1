@@ -1,4 +1,7 @@
 *.pdf
 *.txt
+*.zip
 
 .idea
+
+!README.txt

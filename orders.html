@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <head>
 	<title>MealMobile</title>
+	<script src="restaurants.js"></script>
 	<script src="client.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body onload="init()">
-	<div id="searchbar" class="dropdown onFocus" style="display: inline-block; ">
-		<input type="text" id="searchBox" placeholder="Search for Restaurants"/>
+	<div id="searchbar" class="dropdown onFocus">
+		<input type="text" id="searchBox" placeholder="Search for Restaurants" onkeypress="updateDropdown()"/>
 		<div class="dropdownContent"></div>
 	</div>
 	
-	<table style="width: 100%">
+	<table id="mainContent">
 
 		<colgroup>
 			<col class="categoryCol"/>
@@ -38,7 +39,7 @@
 			<td rowspan="1" id="order"></td>
 		</tr>
 		<tr>
-			<td id="orderSummary"> <!--TODO: Add a 'submit order' button-->
+			<td id="orderSummary">
 				<h3>Order Summary:</h3>
 				<p id="subtotal">Subtotal:<span class="priceTag">$0.00</span></p>
 				<p id="taxes">Tax:<span class="priceTag">$0.00</span></p>

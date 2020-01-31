@@ -6,6 +6,10 @@
 
 
 /*CSS responsible for dropdown menus*/
+#searchbar {
+    display: inline-block;
+}
+
 .dropdown {
   position: relative;
 }
@@ -93,6 +97,10 @@ tbody tr {
 }
 
 /*CSS for other stuff*/ /*TODO: add reactive styling to accomodate for varied screen sizes*/
+
+#mainContent {
+    width: 100%;
+}
 
 .addButton,
 .removeButton {
