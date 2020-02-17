@@ -1,15 +1,18 @@
 COMP 2406A assignment 1 Submission:
     Included Files:
         README.txt
-        orders.html
+        server.js
+        order.html
         client.js
         styles.css
-        restaurants.js
         add.png
         remove.png
 
+        restaurants/*.json
+
     Execution Instructions:
-        Open the orders.html file in a browser.
+        call "node server.js"
+        navigate to localhost:3000/
 
     Additional Features:
         Searchable restaurant dropdown (Some issues)

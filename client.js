@@ -3,7 +3,7 @@
 const addImg = "add.png";
 const removeImg = "remove.png";
 
-let restaurants = restaurantData;
+let restaurants = [];
 
 let currentRestaurantObj = null;
 let currentCategoryObj = null;
@@ -18,15 +18,28 @@ function init(){
 	let dropdown = document.getElementById(
 		"searchbar").getElementsByClassName(
 			"dropdownContent").item(0);
-	
-	restaurants.forEach((restaurant)=>{ //populate the dropdown with restaurants
-		let newNode = document.createElement("p");
-		newNode.innerText = restaurant.name;
-		newNode.addEventListener("click", ()=>{
-			selectRestaurant(restaurant)
-		});
-		dropdown.appendChild(newNode);
-	});
+
+
+	let xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = ()=>{
+		//requests an array of restaurant objects with just the name
+		//full restaurant data will be requested once selected
+		console.log(`Ready State: ${xhttp.readyState}`);
+		if(xhttp.readyState === 4 && xhttp.status === 200){
+			console.log(`Data Recieved:\n${JSON.parse(xhttp.responseText)}`);
+			restaurants = JSON.parse(xhttp.responseText);
+			restaurants.forEach((restaurant) => { //populate the dropdown with restaurants
+				let newNode = document.createElement("p");
+				newNode.innerText = restaurant.name;
+				newNode.addEventListener("click", () => {
+					selectRestaurant(restaurant)
+				});
+				dropdown.appendChild(newNode);
+			});
+		}
+	};
+	xhttp.open("GET", "/restaurants/names.json", true);
+	xhttp.send();
 	
 	document.getElementById("submitButton").addEventListener("click", order)
 }
@@ -36,6 +49,7 @@ function init(){
 * If order data would be lost in changing restaurants, prompts the user for confirmation
 * */
 function selectRestaurant(restaurant){
+	//TODO: send AJAX request for restaurant data upon request.
 	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
 		(currentRestaurantObj === restaurant ||
 		!confirm("Are you sure? You will lose your current order."))) {
@@ -59,7 +73,7 @@ function selectRestaurant(restaurant){
 	document.getElementById("restaurantName").innerText = restaurant.name;
 	document.getElementById("restaurantInfo").innerHTML =
 		`<h5>Minimum Order: \$${restaurant.min_order}<br/>`+
-		`Delivery Charge: \$${restaurant.delivery_charge}</h5>`;
+		`Delivery Charge: \$${restaurant.delivery_fee}</h5>`;
 	
 	update();
 }
@@ -125,7 +139,7 @@ function clearNode(node){
 /*
 * resets all html and js state to when the page was loaded
 * */
-function resetPage() {
+function resetPage(){
 	
 	clearNode(document.getElementById("restaurantName"));
 	clearNode(document.getElementById("restaurantInfo"));
@@ -137,6 +151,9 @@ function resetPage() {
 	document.getElementById("taxes").getElementsByClassName("priceTag")[0].innerText = "$0.00";
 	document.getElementById("deliveryFee").getElementsByClassName("priceTag")[0].innerText = "$0.00";
 	document.getElementById("total").getElementsByClassName("priceTag")[0].innerText = "$0.00";
+	document.getElementById("submitButton").classList.remove("nsf");
+	document.getElementById("submitButton").classList.add("noneSelected");
+	document.getElementById("submitButton").innerText = "Please Select a Restaurant";
 
 	currentRestaurantObj = null;
 	currentCategoryObj = null;
@@ -173,7 +190,7 @@ function update(){
 	//update #orderSummary
 	let subtotal = currentOrder.subtotal.toFixed(2);
 	let taxes = (0.1*subtotal).toFixed(2);
-	let deliveryFee = currentRestaurantObj.delivery_charge.toFixed(2);
+	let deliveryFee = currentRestaurantObj.delivery_fee.toFixed(2);
 	let total = parseFloat(parseFloat(subtotal)+parseFloat(taxes)+parseFloat(deliveryFee)).toFixed(2);
 
 	document.getElementById("subtotal").getElementsByClassName("priceTag")[0].innerText = `\$${subtotal}`;
