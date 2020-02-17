@@ -73,7 +73,6 @@ const server = http.createServer((request, response)=>{
                 response.statusCode = 200;
                 response.contentType = contentTypes[".json"];
                 response.end(JSON.stringify(restaurantObj));
-                console.log(JSON.stringify(restaurantObj));
                 return
             }
             throw new ResourceError(request.url);
