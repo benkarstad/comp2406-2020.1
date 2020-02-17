@@ -6,6 +6,7 @@
 </head>
 
 <body onload="init()">
+{% include "templated_components/_header.njk" %}
 	<div id="searchbar" class="dropdown onFocus">
 		<input type="text" id="searchBox" placeholder="Search for Restaurants" onkeypress="updateDropdown()"/>
 		<div class="dropdownContent"></div>
@@ -50,4 +51,5 @@
 		</tbody>
 
 	</table>
+{% include "templated_components/_footer.njk" %}
 </body>

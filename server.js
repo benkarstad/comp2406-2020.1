@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const http = require("http");
+const njk = require("nunjucks");
 
 class ResourceError extends Error{
     constructor(resource){
@@ -30,20 +31,29 @@ function init(){
     });
 }
 
-//=====| Code execution begins here |=====
+/* =====| Code execution begins here |===== */
 init();
 const server = http.createServer((request, response)=>{
     const responses = { //server instructions for specific cases
         "": function(request, response){ //TODO: index.html
-            response.statusCode = 200;
-            response.end("Success");
+            njk.render(
+                "index.njk", {},
+                (up, data)=>{
+                    if(up) throw up;
+                    response.statusCode = 200;
+                    response.setHeader("Content-Type", contentTypes[".html"]);
+                    response.end(data);
+                })
         },
 
         "order": function(request, response){ //serve the html for the order page
-            fs.readFile("order.html", (up, data)=>{
+            njk.render(
+                "order.njk", {},
+                (up, data)=>{
                if(up){
                    response.statusCode = 500;
                    response.end("Internal Server Error");
+                   console.log(up);
                    return
                }
                 response.statusCode = 200;
@@ -77,32 +87,35 @@ const server = http.createServer((request, response)=>{
 
     console.log(`${request.method} request for ${request.url}`);
     let pathArgs = request.url.match(pathArgsRegX);
-    try {
-        fs.readFile(/(?<=^\/)(.*)/.exec(request.url)[1], (up, data)=>{
-            const filetype = fileExt.exec(request.url);
-            if(up){ //on an error...
-                if (up.code === "ENOENT") { //if file DNE, try a special response case
-                    responses[pathArgs[0]](request, response);
-                    return
+    const filetype = fileExt.exec(request.url);
+
+    fs.readFile(/(?<=^\/)(.*)/.exec(request.url)[1], (up, data)=>{
+        if(up){ //on an error...
+            if (up.code === "ENOENT"){ //if file DNE, try a special response case...
+                try{
+                responses[pathArgs[0]](request, response);
+                }catch(up){//If no matches, 404
+                    if((up instanceof TypeError && up.message === "responses[pathArgs[0]] is not a function")
+                            || up instanceof ResourceError){
+                        response.statusCode = 404;
+                        response.end("Unknown resource.");
+                        console.log(`Unknown resource ${request.url}\n`)
+                    }else{
+                        console.log(up);
+                    }
                 }
-                //if other error, respond 500
-                response.statusCode = 500;
-                response.end("Internal Server Error");
-                console.log(up);
                 return
             }
-            response.statusCode = 200;
-            response.setHeader("Content-Type", contentTypes[filetype]);
-            response.end(data);
-        });
-    }catch(up){//If no matches, 404
-        if((up instanceof TypeError && up.message === "responses[pathArgs[0]] is not a function") || up instanceof ResourceError){
-            response.statusCode = 404; //TODO: Improve 404 page
-            response.end("Unknown resource.");
-            console.log(`Unknown resource ${request.url}\n`)
-        }else{
+            //if other error, respond 500
+            response.statusCode = 500;
+            response.end("Internal Server Error");
             console.log(up);
+            return
         }
-    }
+        response.statusCode = 200;
+        response.setHeader("Content-Type", contentTypes[filetype]);
+        response.end(data);
+    });
+
 });
 server.listen(3000);

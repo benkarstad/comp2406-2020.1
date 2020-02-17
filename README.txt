@@ -7,6 +7,7 @@ COMP 2406A assignment 1 Submission:
         styles.css
         add.png
         remove.png
+        contentTypes.json
 
         restaurants/*.json
 
@@ -16,5 +17,4 @@ COMP 2406A assignment 1 Submission:
 
     Additional Features:
         Searchable restaurant dropdown (Some issues)
-        Restaurant data stored in a separate file
         Dynamically load data by category instead of linking between page locations
