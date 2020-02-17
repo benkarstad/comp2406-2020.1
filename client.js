@@ -24,15 +24,13 @@ function init(){
 	xhttp.onreadystatechange = ()=>{
 		//requests an array of restaurant objects with just the name
 		//full restaurant data will be requested once selected
-		console.log(`Ready State: ${xhttp.readyState}`);
 		if(xhttp.readyState === 4 && xhttp.status === 200){
-			console.log(`Data Recieved:\n${JSON.parse(xhttp.responseText)}`);
 			restaurants = JSON.parse(xhttp.responseText);
 			restaurants.forEach((restaurant) => { //populate the dropdown with restaurants
 				let newNode = document.createElement("p");
 				newNode.innerText = restaurant.name;
 				newNode.addEventListener("click", () => {
-					selectRestaurant(restaurant)
+					selectRestaurant(restaurant);
 				});
 				dropdown.appendChild(newNode);
 			});
@@ -49,33 +47,54 @@ function init(){
 * If order data would be lost in changing restaurants, prompts the user for confirmation
 * */
 function selectRestaurant(restaurant){
-	//TODO: send AJAX request for restaurant data upon request.
 	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
 		(currentRestaurantObj === restaurant ||
 		!confirm("Are you sure? You will lose your current order."))) {
 		return;
 	}
 	resetPage();
-	
-	//loads the restaurant content (i.e. restaurants[index]) onto the main page
-	currentRestaurantObj = restaurant;
-	let categoriesNode = document.getElementById("categories");
-	clearNode(categoriesNode);
-	Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
-		let categoryP = document.createElement("p");
-		categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
-		categoryP.addEventListener("click",()=>{ //make it selectable
-			selectCategory(categoryName);
-		});
-		categoriesNode.appendChild(categoryP)
-	});
 
-	document.getElementById("restaurantName").innerText = restaurant.name;
-	document.getElementById("restaurantInfo").innerHTML =
-		`<h5>Minimum Order: \$${restaurant.min_order}<br/>`+
-		`Delivery Charge: \$${restaurant.delivery_fee}</h5>`;
-	
-	update();
+	currentRestaurantObj = restaurant;
+
+	function renderContent(){ //loads the restaurant content (i.e. restaurants[index]) onto the main page
+		let categoriesNode = document.getElementById("categories");
+		clearNode(categoriesNode);
+		Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
+			let categoryP = document.createElement("p");
+			categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
+			categoryP.addEventListener("click",()=>{ //make it selectable
+				selectCategory(categoryName);
+			});
+			categoriesNode.appendChild(categoryP)
+		});
+
+		document.getElementById("restaurantName").innerText = restaurant.name;
+		document.getElementById("restaurantInfo").innerHTML =
+			`<h5>Minimum Order: \$${restaurant.min_order}<br/>`+
+			`Delivery Charge: \$${restaurant.delivery_fee}</h5>`;
+
+		update();
+	}
+
+	//if missing, request restaurant data from server
+	if(restaurant.menu == null)
+	{
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = ()=>{
+			if(xhttp.readyState === 4 && xhttp.status === 200){
+				let newObj = JSON.parse(xhttp.responseText);
+				currentRestaurantObj.name = newObj.name;
+				currentRestaurantObj.min_order = newObj.min_order;
+				currentRestaurantObj.delivery_fee = newObj.delivery_fee;
+				currentRestaurantObj.menu = newObj.menu;
+				renderContent();
+			}
+		};
+		xhttp.open("GET", `/restaurants?name=${currentRestaurantObj.name}`, true);
+		xhttp.send();
+	}else{
+		renderContent();
+	}
 }
 
 /*
@@ -251,6 +270,7 @@ function order(){
 		alert("No Restaurant Selected");
 	}
 	else if(currentOrder.subtotal >= currentRestaurantObj.min_order){ //submit the order
+		//TODO: POST order information to the server
 		alert("Order Submitted");
 		resetPage();
 	}

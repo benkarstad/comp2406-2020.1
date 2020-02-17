@@ -20,8 +20,9 @@ const contentTypes = { //TODO: put into JSON file
 };
 
 let restaurants = [];
+//TODO: implement order analytics
 
-const pathArgsRegX = /(?<=\/)[^\/]*/g; //matches to individual segments of a path string
+const pathArgsRegX = /(?<=[\/?])[^\/?]*/g; //matches to individual segments of a path string
 const fileExt = /\.[^\/\.]+$/; //matches the file extension of a file or file path
 
 function init(){
@@ -35,7 +36,7 @@ function init(){
 
 
 init();
-setTimeout(()=>{console.log(restaurants, JSON.stringify(restaurants, ["name"]))}, 2500);
+setTimeout(()=>{console.log(restaurants, JSON.stringify(restaurants, ["name"]))}, 750);
 const server = http.createServer((request, response)=>{
     const responses = { //server instructions for specific cases
         "": function(request, response){ //TODO: index.html
@@ -62,7 +63,20 @@ const server = http.createServer((request, response)=>{
                 response.statusCode = 200;
                 response.contentType = contentTypes[".json"];
                 response.end(JSON.stringify(restaurants, ["name"]));
+                return
             }
+            query = new URLSearchParams(pathArgs[1]);
+            if(query.has("name")){
+                let restaurantObj = restaurants.find((obj)=>{
+                    return obj.name === query.get("name");
+                });
+                response.statusCode = 200;
+                response.contentType = contentTypes[".json"];
+                response.end(JSON.stringify(restaurantObj));
+                console.log(JSON.stringify(restaurantObj));
+                return
+            }
+            throw new ResourceError(request.url);
         }
     };
     responses["index"] = responses[""];
@@ -88,12 +102,12 @@ const server = http.createServer((request, response)=>{
             response.end(data);
         });
     }catch(up){//If no matches, 404
-        if(up instanceof TypeError && up.message === "responses[match[0]] is not a function" || up instanceof ResourceError){
+        if((up instanceof TypeError && up.message === "responses[pathArgs[0]] is not a function") || up instanceof ResourceError){
             response.statusCode = 404; //TODO: Improve 404 page
             response.end("Unknown resource.");
             console.log(`Unknown resource ${request.url}\n`)
         }else{
-            throw up;
+            console.log(up);
         }
     }
 });
