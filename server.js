@@ -10,15 +10,7 @@ class ResourceError extends Error{
     }
 }
 
-const contentTypes = { //TODO: put into JSON file
-    ".html": "text/html",
-    ".css": "text/css",
-    ".js": "text/javascript",
-    ".png": "image/png",
-    ".json": "application/json",
-    ".txt": "text/plain"
-};
-
+let contentTypes;
 let restaurants = [];
 //TODO: implement order analytics
 
@@ -32,11 +24,14 @@ function init(){
             restaurants.push(JSON.parse(data));
         });
     }
+    fs.readFile("contentTypes.json", (up, data)=>{
+        if(up) throw up;
+        contentTypes = JSON.parse(data);
+    });
 }
 
-
+//=====| Code execution begins here |=====
 init();
-setTimeout(()=>{console.log(restaurants, JSON.stringify(restaurants, ["name"]))}, 750);
 const server = http.createServer((request, response)=>{
     const responses = { //server instructions for specific cases
         "": function(request, response){ //TODO: index.html
