@@ -13,7 +13,11 @@ class ResourceError extends Error{
 
 let contentTypes;
 let restaurants = [];
-//TODO: implement order analytics
+let orderStats = {
+    orderCount: 0,
+    totalsSum: 0,
+    itemsOrdered: {}
+};
 
 const pathArgsRegX = /(?<=[\/?])[^\/?]*/g; //matches to individual segments of a path string
 const fileExt = /\.[^\/\.]+$/; //matches the file extension of a file or file path
@@ -35,7 +39,7 @@ function init(){
 init();
 const server = http.createServer((request, response)=>{
     const responses = { //server instructions for specific cases
-        "": function(request, response){ //TODO: index.html
+        "": function(request, response){
             njk.render(
                 "index.njk", {},
                 (up, data)=>{
@@ -47,19 +51,45 @@ const server = http.createServer((request, response)=>{
         },
 
         "order": function(request, response){ //serve the html for the order page
-            njk.render(
+            let pathArgs = request.url.match(pathArgsRegX);
+            if(request.method === "GET" && pathArgs.length === 1){
+                njk.render(
                 "order.njk", {},
                 (up, data)=>{
-               if(up){
-                   response.statusCode = 500;
-                   response.end("Internal Server Error");
-                   console.log(up);
-                   return
-               }
-                response.statusCode = 200;
-                response.setHeader("Content-Type", contentTypes[".html"]);
-                response.end(data);
-            });
+                   if(up){
+                           response.statusCode = 500;
+                           response.end("Internal Server Error");
+                           console.log(up);
+                           return
+                   }
+                    response.statusCode = 200;
+                    response.setHeader("Content-Type", contentTypes[".html"]);
+                    response.end(data);
+                });
+            }else if(request.method === "POST"){
+                let query = new URLSearchParams(pathArgs[pathArgs.length-1]);
+                let orderData = "";
+                request.on("data", (chunk)=>{ //extract all data from POST request
+                    orderData+= chunk.toString();
+                });
+                request.on("end", ()=>{ //aggregate data into orderStats
+                    if(pathArgs[1] === "submit"){
+                        let restaurant = query.get("restaurant");
+                        orderData = JSON.parse(orderData); //convert json string to object
+                        orderStats.totalsSum = parseFloat(parseFloat(orderStats.totalsSum)+parseFloat(query.get("total"))).toFixed(2);
+                        orderStats.orderCount++;
+                        orderStats.itemsOrdered[restaurant] === undefined ? orderStats.itemsOrdered[restaurant] = {}: true;
+                        for(let i=0; i<orderData.length; i++){ //add each item's count to orderStats
+                            orderStats.itemsOrdered[restaurant][orderData[i].item] === undefined ?
+                                orderStats.itemsOrdered[restaurant][orderData[i].item] = orderData[i].amount :
+                                orderStats.itemsOrdered[restaurant][orderData[i].item] += orderData[i].amount;
+                        }
+                        console.log(orderStats);
+                    }
+                    response.statusCode = 200;
+                    response.end(JSON.stringify({orderID: orderStats.orderCount}));
+                });
+            }
         },
 
         "restaurants": function(request, response){

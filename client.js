@@ -10,7 +10,18 @@ let currentCategoryObj = null;
 let currentOrder = {
 	items: [],
 	amounts: [],
-	subtotal: 0
+	subtotal: 0,
+	export: function(){
+		let output = [];
+		for(let i=0; i<this.items.length;i++){
+			output.push(
+			{
+				item: this.items[i].name,
+				amount: this.amounts[i]
+			});
+		}
+		return output
+	}
 };
 
 function init(){
@@ -270,9 +281,30 @@ function order(){
 		alert("No Restaurant Selected");
 	}
 	else if(currentOrder.subtotal >= currentRestaurantObj.min_order){ //submit the order
-		//TODO: POST order information to the server
-		alert("Order Submitted");
-		resetPage();
+		let subtotal = currentOrder.subtotal.toFixed(2);
+		let taxes = (0.1*subtotal).toFixed(2);
+		let deliveryFee = currentRestaurantObj.delivery_fee.toFixed(2);
+		let total = parseFloat(parseFloat(subtotal)+parseFloat(taxes)+parseFloat(deliveryFee)).toFixed(2);
+
+		console.log(currentOrder);
+
+		let orderData = currentOrder.export();
+		let xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = ()=>{
+			if(xhttp.readyState === 4){
+				console.log(`responseText: ${xhttp.responseText}`);
+				let responseObj = JSON.parse(xhttp.responseText);
+				if(xhttp.status === 200){
+					alert(`Order Submitted\nOrder ID: ${responseObj.orderID}`);
+					resetPage();
+				}else if(xhttp.status === 500){
+					alert("Internal Server Error\nPlease Try Again");
+				}
+			}
+		};
+		xhttp.open("POST", `order/submit?restaurant=${currentRestaurantObj.name}&total=${total}`, true);
+		xhttp.send(JSON.stringify(orderData));
+		console.log(orderData);
 	}
 	else{
 		alert(`Please order at least \$${currentRestaurantObj.min_order} to submit`);
