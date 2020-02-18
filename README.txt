@@ -1,18 +1,21 @@
 COMP 2406A assignment 1 Submission:
     Included Files:
         README.txt
+        package-lock.json
         server.js
-        order.html
+        contentTypes.json
+        index.njk
+        order.njk
         client.js
         styles.css
         add.png
         remove.png
-        contentTypes.json
 
+        templated_components/*.njk
         restaurants/*.json
 
     Execution Instructions:
-        call "node server.js"
+        call "nodemon server.js"
         navigate to localhost:3000/
 
     Additional Features:

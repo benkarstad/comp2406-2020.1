@@ -3,5 +3,7 @@
 *.zip
 
 .idea
+node_modules
+
 
 !README.txt
