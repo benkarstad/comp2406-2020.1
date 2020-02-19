@@ -41,7 +41,10 @@ const server = http.createServer((request, response)=>{
     const responses = { //server instructions for specific cases
         "": function(request, response){
             njk.render(
-                "index.njk", {},
+                "index.njk",
+                {
+                    title: "Welcome to MealMobile"
+                },
                 (up, data)=>{
                     if(up) throw up;
                     response.statusCode = 200;
@@ -54,7 +57,10 @@ const server = http.createServer((request, response)=>{
             let pathArgs = request.url.match(pathArgsRegX);
             if(request.method === "GET" && pathArgs.length === 1){
                 njk.render(
-                "order.njk", {},
+                "order.njk",
+                {
+                    body: {onload: "init()"}
+                },
                 (up, data)=>{
                    if(up){
                            response.statusCode = 500;
