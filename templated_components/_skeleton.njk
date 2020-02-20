@@ -13,14 +13,15 @@
 <body onload="{{ body.onload | default("") }}">
 
 {% block header %}
-{% include "templated_components/_header.njk" %}
+    {% include "templated_components/_header.njk" %}
 {% endblock %}
 
 {% block body %}
+    <h2>{{ bodyText }}</h2>
 {% endblock %}
 
 {% block footer %}
-{% include "templated_components/_footer.njk" %}
+    {% include "templated_components/_footer.njk" %}
 {% endblock %}
 
 </body>

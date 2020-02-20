@@ -1,0 +1,12 @@
+{% extends "templated_components/_skeleton.njk" %}
+
+{% block body %}
+{% for restaurant in orderStats %}
+    <h2>{{ restaurant.name }}</h2>
+    <h3>Favorite Item: {{ restaurant.favItem }}</h3>
+    <h3>Total Orders Submitted: {{ restaurant.orderCount }}</h3>
+    <h3>Average Order Cost: {{ restaurant.totalsSum / restaurant.orderCount }}</h3>
+{% else %}
+    <h3>No Orders Submitted Yet</h3>
+{% endfor %}
+{% endblock %}
