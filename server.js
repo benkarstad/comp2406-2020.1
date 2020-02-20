@@ -85,32 +85,37 @@ const responses = { //server instructions for specific cases
                 orderData+= chunk.toString();
             });
             request.on("end", ()=>{ //aggregate data into orderStats
-                let restaurant = query.get("restaurant");
                 if(pathArgs[1] === "submit"){
+                    let restaurantName = query.get("restaurant");
                     orderData = JSON.parse(orderData); //convert json string to object
-                    if(orderStats[restaurant] === undefined){ //initialize a new object
-                        orderStats[restaurant] = {
-                            name: restaurant,
+                    if(orderStats[restaurantName] === undefined){ //if DNE initialize a new restaurant object
+                        orderStats[restaurantName] = {
+                            name: restaurantName,
                             orderCount: 0,
                             totalsSum: 0,
+                            avgOrder: 0,
                             favItem: "None Yet",
                             itemsOrdered: {}
                         }
                     }
-                    orderStats[restaurant].totalsSum = parseFloat( //increase sum of all order totals
-                        parseFloat(orderStats[restaurant].totalsSum)+
-                               parseFloat(query.get("total"))
-                    );
-                    orderStats[restaurant].orderCount++;
+                    let restaurant = orderStats[restaurantName];
+                    restaurant.totalsSum += parseFloat(query.get("total")); //increase sum of order totals
+                    restaurant.orderCount++; //increment order counter
+                    restaurant.avgOrder = (restaurant.totalsSum / restaurant.orderCount).toFixed(2)
                     for(let i=0; i<orderData.length; i++){ //add each item's count to orderStats
-                        orderStats[restaurant].itemsOrdered[orderData[i].item] === undefined ?
-                            orderStats[restaurant].itemsOrdered[orderData[i].item] = orderData[i].amount :
-                            orderStats[restaurant].itemsOrdered[orderData[i].item] += orderData[i].amount;
+                        restaurant.itemsOrdered[orderData[i].item] === undefined ?
+                            restaurant.itemsOrdered[orderData[i].item] = orderData[i].amount :
+                            restaurant.itemsOrdered[orderData[i].item] += orderData[i].amount;
                     }
+
+                    //update most purchased item
+                    restaurant.favItem = Object.getOwnPropertyNames(restaurant.itemsOrdered).reduce((acc, cur, ind, arr)=>{
+                        return restaurant.itemsOrdered[cur] > restaurant.itemsOrdered[acc] ? cur : acc;
+                    });
                     console.log(orderStats);
+                    response.statusCode = 200;
+                    response.end(JSON.stringify({orderID: restaurant.orderCount}));
                 }
-                response.statusCode = 200;
-                response.end(JSON.stringify({orderID: orderStats[restaurant].orderCount}));
             });
         }
     },
