@@ -1,5 +1,3 @@
-//TODO: write batch script to run server automatically
-
 const fs = require("fs");
 const http = require("http");
 const njk = require("nunjucks");
@@ -30,8 +28,7 @@ function init(){
         contentTypes = JSON.parse(data);
     });
 }
-function internalErr(response, up)
-{
+function internalErr(response, up){
     njk.render(
         "templated_components/_skeleton.njk",
         {
@@ -157,11 +154,11 @@ const responses = { //server instructions for specific cases
             })
     }
 };
+responses["index"] = responses[""];
 
 /* =====| Code execution begins here |===== */
 init();
 const server = http.createServer((request, response)=>{
-    responses["index"] = responses[""];
 
     console.log(`${request.method} request for ${request.url}`);
     let pathArgs = request.url.match(pathArgsRegX);

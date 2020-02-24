@@ -6,6 +6,7 @@ COMP 2406A assignment 1 Submission:
         contentTypes.json
         index.njk
         order.njk
+	    stats.njk
         client.js
         styles.css
         add.png
@@ -15,9 +16,9 @@ COMP 2406A assignment 1 Submission:
         restaurants/*.json
 
     Execution Instructions:
-        call "nodemon server.js"
+        command: node server.js
         navigate to localhost:3000/
 
     Additional Features:
-        Searchable restaurant dropdown (Some issues)
+        Searchable restaurant dropdown
         Dynamically load data by category instead of linking between page locations
