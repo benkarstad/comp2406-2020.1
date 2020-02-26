@@ -1,13 +1,14 @@
 COMP 2406A assignment 1 Submission:
     Included Files:
         README.txt
+        package.json
         package-lock.json
         server.js
+        client.js
         contentTypes.json
         index.njk
         order.njk
 	    stats.njk
-        client.js
         styles.css
         add.png
         remove.png
