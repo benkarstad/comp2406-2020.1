@@ -8,7 +8,6 @@ class ResourceError extends Error{
         this.name = "ResourceError"
     }
 }
-
 let contentTypes;
 let restaurants = [];
 let orderStats = [];
@@ -44,7 +43,9 @@ function internalErr(response, up){
     console.log(up);
 }
 
-const responses = { //server instructions for specific cases
+/*server instructions for specific cases*/
+const responses = {
+    /*serve homepage*/
     "": function(request, response){
         njk.render(
             "index.njk",
@@ -58,9 +59,11 @@ const responses = { //server instructions for specific cases
                 response.end(data);
             });
     },
-    "order": function(request, response){ //serve the html for the order page
+    
+    /*serve and parse data for the orders page*/
+    "order": function(request, response){
         let pathArgs = request.url.match(pathArgsRegX);
-        if(request.method === "GET" && pathArgs.length === 1){
+        if(request.method === "GET" && pathArgs.length === 1){ //serve the html for the order page
             njk.render(
                 "order.njk",
                 {
@@ -75,7 +78,7 @@ const responses = { //server instructions for specific cases
                     response.setHeader("Content-Type", contentTypes[".html"]);
                     response.end(data);
                 });
-        }else if(request.method === "POST"){
+        }else if(request.method === "POST"){ //parse and store submitted order data
             let query = new URLSearchParams(pathArgs[pathArgs.length-1]);
             let orderData = "";
             request.on("data", (chunk)=>{ //extract all data from POST request
@@ -116,6 +119,8 @@ const responses = { //server instructions for specific cases
             });
         }
     },
+    
+    /*serve JSON data of restaurant information*/
     "restaurants": function(request, response){
         let pathArgs = request.url.match(pathArgsRegX);
         if(pathArgs[1] === "names.json"){
@@ -136,6 +141,8 @@ const responses = { //server instructions for specific cases
         }
         throw new ResourceError(request.url);
     },
+    
+    /*serve the stats page*/
     "stats": function(request, response){
         njk.render(
             "stats.njk",
@@ -159,7 +166,6 @@ responses["index"] = responses[""];
 /* =====| Code execution begins here |===== */
 init();
 const server = http.createServer((request, response)=>{
-
     console.log(`${request.method} request for ${request.url}`);
     let pathArgs = request.url.match(pathArgsRegX);
     const filetype = fileExt.exec(request.url);
@@ -168,7 +174,7 @@ const server = http.createServer((request, response)=>{
         if(up){ //on an error...
             if (up.code === "ENOENT"){ //if file DNE, try a special response case...
                 try{
-                responses[pathArgs[0]](request, response);
+                    responses[pathArgs[0]](request, response);
                 }catch(up){//If no matches, 404
                     if((up instanceof TypeError && up.message === "responses[pathArgs[0]] is not a function")
                             || up instanceof ResourceError){
@@ -190,6 +196,5 @@ const server = http.createServer((request, response)=>{
         response.setHeader("Content-Type", contentTypes[filetype]);
         response.end(data);
     });
-
 });
 server.listen(3000);

@@ -17,9 +17,12 @@ COMP 2406A assignment 1 Submission:
         restaurants/*.json
 
     Execution Instructions:
-        command: node server.js
-        navigate to localhost:3000/
+        commands:
+            npm install
+            node server.js
+        navigate to "localhost:3000/" in a browser
 
     Additional Features:
         Searchable restaurant dropdown
         Dynamically load data by category instead of linking between page locations
+        *.njk files are Nunjucks templates (https://mozilla.github.io/nunjucks/)
