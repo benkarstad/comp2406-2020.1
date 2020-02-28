@@ -67,26 +67,6 @@ function selectRestaurant(restaurant){
 
 	currentRestaurantObj = restaurant;
 
-	function renderContent(){ //loads the restaurant content (i.e. restaurants[index]) onto the main page
-		let categoriesNode = document.getElementById("categories");
-		clearNode(categoriesNode);
-		Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
-			let categoryP = document.createElement("p");
-			categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
-			categoryP.addEventListener("click",()=>{ //make it selectable
-				selectCategory(categoryName);
-			});
-			categoriesNode.appendChild(categoryP)
-		});
-
-		document.getElementById("restaurantName").innerText = restaurant.name;
-		document.getElementById("restaurantInfo").innerHTML =
-			`<h5>Minimum Order: \$${restaurant.min_order}<br/>`+
-			`Delivery Charge: \$${restaurant.delivery_fee}</h5>`;
-
-		update();
-	}
-
 	//if missing, request restaurant data from server
 	if(restaurant.menu == null)
 	{
@@ -94,10 +74,7 @@ function selectRestaurant(restaurant){
 		xhttp.onreadystatechange = ()=>{
 			if(xhttp.readyState === 4 && xhttp.status === 200){
 				let newObj = JSON.parse(xhttp.responseText);
-				currentRestaurantObj.name = newObj.name;
-				currentRestaurantObj.min_order = newObj.min_order;
-				currentRestaurantObj.delivery_fee = newObj.delivery_fee;
-				currentRestaurantObj.menu = newObj.menu;
+				currentRestaurantObj = newObj;
 				renderContent();
 			}
 		};
@@ -190,6 +167,27 @@ function resetPage(){
 	currentOrder.items = [];
 	currentOrder.amounts = [];
 	currentOrder.subtotal = 0;
+}
+
+/*loads the restaurant content (i.e. currentRestaurantObj) onto the main page*/
+function renderContent(){
+	let categoriesNode = document.getElementById("categories");
+	clearNode(categoriesNode);
+	Object.keys(currentRestaurantObj.menu).forEach((categoryName)=>{ //add each category to the table
+		let categoryP = document.createElement("p");
+		categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
+		categoryP.addEventListener("click",()=>{ //make it selectable
+			selectCategory(categoryName);
+		});
+		categoriesNode.appendChild(categoryP)
+	});
+	
+	document.getElementById("restaurantName").innerText = currentRestaurantObj.name;
+	document.getElementById("restaurantInfo").innerHTML =
+		`<h5>Minimum Order: \$${currentRestaurantObj.min_order}<br/>`+
+		`Delivery Charge: \$${currentRestaurantObj.delivery_fee}</h5>`;
+	
+	update();
 }
 
 /*
