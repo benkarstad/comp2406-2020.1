@@ -112,7 +112,6 @@ const responses = {
                     restaurant.favItem = Object.getOwnPropertyNames(restaurant.itemsOrdered).reduce((acc, cur, ind, arr)=>{
                         return restaurant.itemsOrdered[cur] > restaurant.itemsOrdered[acc] ? cur : acc;
                     });
-                    console.log(orderStats);
                     response.statusCode = 200;
                     response.end(JSON.stringify({orderID: restaurant.orderCount}));
                 }
