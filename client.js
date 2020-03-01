@@ -27,30 +27,41 @@ let currentOrder = {
  * sets event listener for #submitButton
  * */
 function init(){
-    //load restaurants into searchbar
-    let dropdown = document.getElementById(
-        "searchbar").getElementsByClassName(
-        "dropdownContent").item(0);
-
-
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = ()=>{
         //requests an array of restaurant objects with just the name
         //full restaurant data will be requested once selected
         if(xhttp.readyState === 4 && xhttp.status === 200){
             let restaurants = JSON.parse(xhttp.responseText);
-            restaurants.forEach((restaurant) => { //populate the dropdown with restaurants
-                let newNode = document.createElement("p");
-                newNode.innerText = restaurant.name;
-                newNode.addEventListener("click", () => selectRestaurant(restaurant.name));
-                dropdown.appendChild(newNode);
-            });
+            updateDropdown(restaurants);
+	        document.getElementById("searchBox").addEventListener("keyup", ()=>filterDropdown(restaurants));
         }
     };
     xhttp.open("GET", "/restaurants/names.json", true);
     xhttp.send();
 
 	document.getElementById("submitButton").addEventListener("click", ()=>order(null));
+}
+
+/*
+* Populates the dropdown menu with the names of provided restaurants.
+*
+* Params:
+*   Object[] restaurants: all the restaurants to be displayed.
+* */
+function updateDropdown(restaurants){
+	let dropdown = document.getElementById(
+		"searchbar").getElementsByClassName(
+		"dropdownContent").item(0);
+	
+	clearNode(dropdown);
+	
+	restaurants.forEach((restaurant) => { //populate the dropdown with restaurants
+		let newNode = document.createElement("p");
+		newNode.innerText = restaurant.name;
+		newNode.addEventListener("click", () => selectRestaurant(restaurant.name));
+		dropdown.appendChild(newNode);
+	});
 }
 
 /*
@@ -75,7 +86,7 @@ function selectRestaurant(restaurantName){
             let restaurant = JSON.parse(xhttp.responseText);
 			var submitButton = document.getElementById("submitButton"),
 				submitBtnClone = submitButton.cloneNode(true);
-			submitButton = submitButton.parentNode.replaceChild(submitBtnClone, submitButton);
+			submitButton.parentNode.replaceChild(submitBtnClone, submitButton);
 
 			document.getElementById("submitButton").addEventListener("click", ()=>order(restaurant));
 
@@ -254,28 +265,22 @@ function update(restaurant){
 }
 
 /*
- * updates listed restaurants based on search query
+ * updates listed restaurants, filtered based on #searchBox query (not cASE-sEnSitIVe)
+ *
+ * Params:
+ *  Object[] restaurants: the names of all the restaurants to filter.
  * */
-function updateDropdown(){
+function filterDropdown(restaurants){
     let queryString = document.getElementById("searchBox").value;
-    let matchedRestaurants = restaurants.filter((restaurant)=>{
-        return restaurant.name.includes(queryString);
-    });
-
-
-    let dropdown = document.getElementById(
-        "searchbar").getElementsByClassName(
-        "dropdownContent").item(0);
-    clearNode(dropdown);
-    matchedRestaurants.forEach((restaurant)=>{
-        let newNode = document.createElement("p");
-        newNode.innerText = restaurant.name;
-        newNode.addEventListener("click", ()=>{
-            selectRestaurant(restaurant)
-        });
-        dropdown.appendChild(newNode);
-    });
-}
+    let matchedRestaurants = [];
+    for(let restaurant in restaurants){
+    	restaurant = restaurants[restaurant].name;
+    	if(restaurant.toUpperCase().includes(queryString.toUpperCase())){
+    		matchedRestaurants.push({"name": restaurant});
+	    }
+    }
+    updateDropdown(matchedRestaurants);
+	}
 
 /*
  * logic for clicking the submit button
