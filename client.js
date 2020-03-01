@@ -56,6 +56,9 @@ function init(){
 /*
 * Displays all the categories of the chosen restaurant to the first column.
 * If order data would be lost in changing restaurants, prompts the user for confirmation
+*
+* Params:
+*   Object restaurant: the restaurant object selected.
 * */
 function selectRestaurant(restaurant){
 	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
@@ -75,18 +78,21 @@ function selectRestaurant(restaurant){
 			if(xhttp.readyState === 4 && xhttp.status === 200){
 				let newObj = JSON.parse(xhttp.responseText);
 				currentRestaurantObj = newObj;
-				renderContent();
+				renderContent(currentRestaurantObj);
 			}
 		};
 		xhttp.open("GET", `/restaurants?name=${currentRestaurantObj.name}`, true);
 		xhttp.send();
 	}else{
-		renderContent();
+		renderContent(currentRestaurantObj);
 	}
 }
 
 /*
 * adds all the dishes of the selected category, their descriptions and their prices to the center column
+*
+* Params:
+*   Object category: the category object selected.
 * */
 function selectCategory(category){
 	currentCategoryObj = currentRestaurantObj.menu[category];
@@ -112,6 +118,10 @@ function selectCategory(category){
 /*
 * increments the count of the selected dish by one, adding it to the list if it isn't there,
 * calls the update() function
+*
+* Params:
+*   Object toAdd: the object of the menu item being added to the order.
+*   Integer amount: the number of that item being added (or removed).
 * */
 function addToCart(toAdd, amount){
 	if(amount === 0) return;
@@ -138,13 +148,16 @@ function addToCart(toAdd, amount){
 
 /*
 * executes order 66
+*
+* Params:
+*   Node node: the HTML node to be cleared.
 * */
 function clearNode(node){
 	while(node.firstChild) node.removeChild(node.firstChild);
 }
 
 /*
-* resets all html and js state to when the page was loaded
+* manually resets all html and js state to when the page was loaded
 * */
 function resetPage(){
 	
@@ -169,11 +182,16 @@ function resetPage(){
 	currentOrder.subtotal = 0;
 }
 
-/*loads the restaurant content (i.e. currentRestaurantObj) onto the main page*/
-function renderContent(){
+/*
+* loads the restaurant content (i.e. currentRestaurantObj) onto the main page
+*
+* Params:
+*   Object restaurant: the restaurant object to be rendered.
+* */
+function renderContent(restaurant){
 	let categoriesNode = document.getElementById("categories");
 	clearNode(categoriesNode);
-	Object.keys(currentRestaurantObj.menu).forEach((categoryName)=>{ //add each category to the table
+	Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
 		let categoryP = document.createElement("p");
 		categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
 		categoryP.addEventListener("click",()=>{ //make it selectable
@@ -182,10 +200,10 @@ function renderContent(){
 		categoriesNode.appendChild(categoryP)
 	});
 	
-	document.getElementById("restaurantName").innerText = currentRestaurantObj.name;
+	document.getElementById("restaurantName").innerText = restaurant.name;
 	document.getElementById("restaurantInfo").innerHTML =
-		`<h5>Minimum Order: \$${currentRestaurantObj.min_order}<br/>`+
-		`Delivery Charge: \$${currentRestaurantObj.delivery_fee}</h5>`;
+		`<h5>Minimum Order: \$${restaurant.min_order}<br/>`+
+		`Delivery Charge: \$${restaurant.delivery_fee}</h5>`;
 	
 	update();
 }
