@@ -36,7 +36,7 @@ function init(){
 		//requests an array of restaurant objects with just the name
 		//full restaurant data will be requested once selected
 		if(xhttp.readyState === 4 && xhttp.status === 200){
-			restaurants = JSON.parse(xhttp.responseText);
+			let restaurants = JSON.parse(xhttp.responseText);
 			restaurants.forEach((restaurant) => { //populate the dropdown with restaurants
 				let newNode = document.createElement("p");
 				newNode.innerText = restaurant.name;
