@@ -34,7 +34,9 @@ function init(){
         if(xhttp.readyState === 4 && xhttp.status === 200){
             let restaurants = JSON.parse(xhttp.responseText);
             updateDropdown(restaurants);
-	        document.getElementById("searchBox").addEventListener("keyup", ()=>filterDropdown(restaurants));
+	        document.getElementById("searchBox").addEventListener(
+	        	"keyup", ()=>filterDropdown(restaurants)
+			);
         }
     };
     xhttp.open("GET", "/restaurants/names.json", true);
@@ -105,11 +107,11 @@ function selectRestaurant(restaurantName){
  *   Object restaurant: the restaurant object selected.
  * */
 function selectCategory(restaurant, categoryName){
-	let category = restaurant.menu[categoryName];
+	let items = restaurant.menu.filter((item)=>{return item.category === categoryName});
     let menuNode = document.getElementById("selection");
     clearNode(menuNode);
-    Object.keys(category).forEach((dish)=>{ //add each dish to the table
-        dish = category[dish];
+    for(let index in items){ //add each dish to the table
+        let dish = items[index];
         let dishDiv = document.createElement("div");//the div for the whole entry
         dishDiv.appendChild(document.createElement("h3")); //item name
         dishDiv.lastChild.innerHTML = `${dish.name}<img class='addButton' src="${addImg}" alt="Add Item">`;
@@ -118,9 +120,11 @@ function selectCategory(restaurant, categoryName){
         dishDiv.lastChild.classList.add("priceTag");
         dishDiv.appendChild(document.createElement("p")); //item description
         dishDiv.lastChild.innerHTML = `<h5>${dish.description}</h5>`;
-        dishDiv.getElementsByClassName("addButton").item(0).addEventListener("click",()=> addToCart(dish, 1, restaurant)); //make it selectable
+        dishDiv.getElementsByClassName("addButton").item(0).addEventListener( //make it selectable
+        	"click",()=> addToCart(dish, 1, restaurant)
+		);
         menuNode.appendChild(dishDiv)
-    });
+    }
 }
 
 /*
@@ -197,12 +201,22 @@ function resetPage(){
 function renderContent(restaurant){
     let categoriesNode = document.getElementById("categories");
     clearNode(categoriesNode);
-    Object.keys(restaurant.menu).forEach((categoryName)=>{ //add each category to the table
+
+    //get all categories from restaurant Object
+	let categories = restaurant.menu.reduce((acc, curr)=>{
+		if(acc.includes(curr.category)) return acc;
+		acc.push(curr.category);
+		return acc;
+	}, []);
+
+	//add each category to the table
+    for(let index in categories){
+    	let categoryName = categories[index];
         let categoryP = document.createElement("p");
-        categoryP.innerHTML = "<h2>"+categoryName+"</h2>";
+        categoryP.innerHTML = `<h2>${categoryName}</h2>`;
         categoryP.addEventListener("click",()=> selectCategory(restaurant, categoryName));
         categoriesNode.appendChild(categoryP)
-    });
+    }
 
     document.getElementById("restaurantName").innerText = restaurant.name;
     document.getElementById("restaurantInfo").innerHTML =
