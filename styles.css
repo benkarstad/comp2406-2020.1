@@ -1,7 +1,7 @@
 :root {
-  --color-1: #881600;
-  --color-2: #4E0110;
-  --color-3: #333232;
+    --color-1: #881600;
+    --color-2: #4E0110;
+    --color-3: #333232;
 }
 
 
@@ -11,70 +11,79 @@
 }
 
 .dropdown {
-  position: relative;
+    position: relative;
 }
 
 .dropdownContent {
-  display: none;
-  position: absolute;
-  background-color: darkred;
-  width: 100%;
+    display: none;
+    position: absolute;
+    background-color: darkred;
+    width: 100%;
 }
 
 .dropdownContent:hover,
 .dropdown.onFocus:focus-within .dropdownContent {
-  display: block;
+    display: block;
 }
 
 .dropdownContent *:hover {
-  background-color: red;
+    background-color: red;
 }
 
 /*CSS for the table*/
 th {
-  font-size: calc(14px + 1.5vw);
+    font-size: calc(14px + 1.5vw);
 }
 
 tbody tr {
-  vertical-align: top;
+    vertical-align: top;
 }
 
 #categories {
-  background-color: gray;
-}
-#categories p:hover {
-  background-color: var(--color-1);
-}
-.categoryCol {
-  width: 20%;
+    background-color: gray;
 }
 
-#selection {}
-#selection *:hover {
-  background-color: red;
+#categories p:hover {
+    background-color: var(--color-1);
 }
+
+.categoryCol {
+    width: 20%;
+}
+
+#selection {
+}
+
+#selection *:hover {
+    background-color: red;
+}
+
 .selectionCol {
-  width: auto;
+    width: auto;
 }
 
 #order {
-  background-color: lightgray;
-}
-#order div {
-  margin-bottom: 10px;
-}
-#order div h4 {
-  display: inline;
-}
-.orderCol {
-  width: 25%;
+    background-color: lightgray;
 }
 
-#orderSummary {}
+#order div {
+    margin-bottom: 10px;
+}
+
+#order div h4 {
+    display: inline;
+}
+
+.orderCol {
+    width: 25%;
+}
+
+#orderSummary {
+}
 
 #deliveryFee {
-  border-bottom: 1px solid #333232;
-  padding-bottom: 3px;
+    border-bottom: 1px solid #333232;
+    padding-bottom: 3px;
 }
 
 #submitButton {
@@ -87,11 +96,13 @@ tbody tr {
     color: darkgreen;
     background-color: lightgreen;
 }
-#submitButton.nsf{
+
+#submitButton.nsf {
     color: black;
     background-color: lightcoral;
 }
-#submitButton.noneSelected{
+
+#submitButton.noneSelected {
     color: white;
     background-color: black;
 }
@@ -104,13 +115,13 @@ tbody tr {
 
 .addButton,
 .removeButton {
-  width: 24px;
-  height: 24px;
+    width: 24px;
+    height: 24px;
 }
 
 .priceTag,
 .addButton,
-.removeButton{
-  float: right;
-  margin-right: 5%;
+.removeButton {
+    float: right;
+    margin-right: 5%;
 }
