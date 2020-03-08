@@ -1,0 +1,52 @@
+{% extends "templated_components/_skeleton.njk" %}
+
+{% block initialize %}
+<script src="client.js"></script>
+{% endblock %}
+
+{% block body %}
+<div id="searchbar" class="dropdown onFocus">
+    <input type="text" id="searchBox" placeholder="Search for Restaurants"/>
+    <div class="dropdownContent"></div>
+</div>
+
+<table id="mainContent">
+
+    <colgroup>
+        <col class="categoryCol"/>
+        <col class="selectionCol"/>
+        <col class="orderCol"/>
+    </colgroup>
+
+    <thead>
+    <tr>
+        <th colspan="2" id="restaurantName"></th>
+        <td id="restaurantInfo"></td>
+    </tr>
+    <tr>
+        <th>Categories</th>
+        <th>Menu</th>
+        <th>Order</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td rowspan="2" id="categories"></td>
+        <td rowspan="2" id="selection"></td>
+        <td rowspan="1" id="order"></td>
+    </tr>
+    <tr>
+        <td id="orderSummary">
+            <h3>Order Summary:</h3>
+            <p id="subtotal">Subtotal:<span class="priceTag">$0.00</span></p>
+            <p id="taxes">Tax:<span class="priceTag">$0.00</span></p>
+            <p id="deliveryFee">Delivery Fee:<span class="priceTag">$0.00</span></p>
+            <p id="total">Total:<span class="priceTag">$0.00</span></p>
+            <div id="submitButton" class="noneSelected">Please Select a Restaurant</div>
+        </td>
+    </tr>
+    </tbody>
+
+</table>
+{% endblock %}

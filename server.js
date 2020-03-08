@@ -1,67 +1,57 @@
-const fs = require("fs");
-const http = require("http");
-const njk = require("nunjucks");
-
-class ResourceError extends Error{
-	constructor(resource){
-		super(`${resource} is not a valid resource`);
-		this.name = "ResourceError";
-	}
-}
-
-let contentTypes;
-let restaurants = [];
-let orderStats = [];
-
-const pathArgsRegX = /(?<=[\/?])[^\/?]*/g; //matches to individual segments of a path string
-const fileExt = /\.[^\/\.]+$/; //matches the file extension of a file or file path
-
 function init(){
-	let restaurantFiles = fs.readdirSync("restaurants/");
-	for(let index = 0; index<restaurantFiles.length; index++){
-		fs.readFile(`restaurants/${restaurantFiles[index]}`, (up, data)=>{
-			restaurants.push(JSON.parse(data));
-		});
-	}
-	fs.readFile("contentTypes.json", (up, data)=>{
-		if(up) throw up;
-		contentTypes = JSON.parse(data);
+	const
+		express = require("express"),
+		fs = require("fs"),
+
+		config = require("./config.json"),
+
+		app = express(),
+
+		njk = require("nunjucks");
+
+	let restaurants = [];
+	let orderStats = [];
+
+	fs.readdir("restaurants/", (up, files)=>{
+		for(let index in files){
+			fs.readFile(`restaurants/${files[index]}`,
+						(up, data)=>{
+							restaurants.push(JSON.parse(data));
+						});
+		}
+
+		app.listen(config.port);
+		console.log(`Server listening at http://localhost:${config.port}`);
 	});
+
+	njk.configure('views', {
+		express: app
+	});
+
+	app.set("view engine", "njk");
+
+	app.use((request, response, next)=>{ //log request info
+		console.log(`${request.method} request for ${request.url}`);
+		next();
+	}); //log request information to console
+	app.use(/^\/(index)?$/, require(`./${config.routerDir}/index_router`)); //serve homepage
+	app.use(/^\/order/, require(`./${config.routerDir}/order_router`)); //serve order form
+	app.use(/^\/stats/,
+			(request, response, next)=>{
+				response.locals.orderStats = orderStats;
+				next();
+			}, //pass orderStats to stats_router
+			require(`./${config.routerDir}/stats_router`) //serve stats page
+	);
+	app.use("/restaurants", require(`./${config.routerDir}/restaurants_router`));
+	app.use("/addrestaurant", require(`./${config.routerDir}/addrestaurant_router`));
 }
 
-function internalErr(response, up){
-	njk.render(
-		"templated_components/_skeleton.njk",
-		{
-			title: "Internal Server Error",
-			bodyText: "Internal Server Error"
-		},
-		(up, data)=>{
-			if(up) throw up;
-			response.statusCode = 500;
-			response.setHeader("Content-Type", contentTypes[".html"]);
-			response.end(data);
-		});
-	console.log(up);
-}
+init();
+/* =====| Ond Code Beyond this point |===== */
 
 /*server instructions for specific cases*/
 const responses = {
-	/*serve homepage*/
-	"": function(request, response){
-		njk.render(
-			"index.njk",
-			{
-				title: "Welcome to MealMobile"
-			},
-			(up, data)=>{
-				if(up) throw up;
-				response.statusCode = 200;
-				response.setHeader("Content-Type", contentTypes[".html"]);
-				response.end(data);
-			});
-	},
-
 	/*serve and parse data for the orders page*/
 	"order": function(request, response){
 		let pathArgs = request.url.match(pathArgsRegX);
@@ -142,60 +132,41 @@ const responses = {
 		}
 		throw new ResourceError(request.url);
 	},
-
-	/*serve the stats page*/
-	"stats": function(request, response){
-		njk.render(
-			"stats.njk",
-			{
-				title: "Order Statistics",
-				orderStats: Object.values(orderStats)
-			},
-			(up, data)=>{
-				if(up){
-					internalErr(response, up);
-					return;
-				}
-				response.statusCode = 200;
-				response.setHeader("Content-Type", contentTypes[".html"]);
-				response.end(data);
-			});
-	}
 };
 responses["index"] = responses[""];
 
 /* =====| Code execution begins here |===== */
-init();
-const server = http.createServer((request, response)=>{
-	console.log(`${request.method} request for ${request.url}`);
-	let pathArgs = request.url.match(pathArgsRegX);
-	const filetype = fileExt.exec(request.url);
-
-	fs.readFile(/(?<=^\/)(.*)/.exec(request.url)[1], (up, data)=>{
-		if(up){ //on an error...
-			if(up.code === "ENOENT"){ //if file DNE, try a special response case...
-				try{
-					responses[pathArgs[0]](request, response);
-				}catch(up){//If no matches, 404
-					if((up instanceof TypeError && up.message === "responses[pathArgs[0]] is not a function")
-						|| up instanceof ResourceError){
-						response.statusCode = 404;
-						response.end("Unknown resource.");
-						console.log(`Unknown resource ${request.url}\n`);
-					}else{
-						internalErr(response, up);
-						console.log(up);
-					}
-				}
-				return;
-			}
-			//if other error, respond 500
-			internalErr(response, up);
-			return;
-		}
-		response.statusCode = 200;
-		response.setHeader("Content-Type", contentTypes[filetype]);
-		response.end(data);
-	});
-});
-server.listen(3000);
+// init();
+// const server = http.createServer((request, response)=>{
+// 	console.log(`${request.method} request for ${request.url}`);
+// 	let pathArgs = request.url.match(pathArgsRegX);
+// 	const filetype = fileExt.exec(request.url);
+//
+// 	fs.readFile(/(?<=^\/)(.*)/.exec(request.url)[1], (up, data)=>{
+// 		if(up){ //on an error...
+// 			if(up.code === "ENOENT"){ //if file DNE, try a special response case...
+// 				try{
+// 					responses[pathArgs[0]](request, response);
+// 				}catch(up){//If no matches, 404
+// 					if((up instanceof TypeError && up.message === "responses[pathArgs[0]] is not a function")
+// 						|| up instanceof ResourceError){
+// 						response.statusCode = 404;
+// 						response.end("Unknown resource.");
+// 						console.log(`Unknown resource ${request.url}\n`);
+// 					}else{
+// 						internalErr(response, up);
+// 						console.log(up);
+// 					}
+// 				}
+// 				return;
+// 			}
+// 			//if other error, respond 500
+// 			internalErr(response, up);
+// 			return;
+// 		}
+// 		response.statusCode = 200;
+// 		response.setHeader("Content-Type", contentTypes[filetype]);
+// 		response.end(data);
+// 	});
+// });
+// server.listen(3000);
