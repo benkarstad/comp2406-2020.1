@@ -20,7 +20,7 @@ COMP 2406A assignment 1 Submission:
         commands:
             npm install
             node server.js
-        navigate to "localhost:3000/" in a browser
+        navigate to "localhost:3000/" in the Google Chrome browser
 
     Additional Features:
         Searchable restaurant dropdown
