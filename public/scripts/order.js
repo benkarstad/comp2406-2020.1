@@ -1,7 +1,7 @@
 //TODO: Use better for/forEach conventions.
 
-const addImg = "add.png";
-const removeImg = "remove.png";
+const addImg = "images/add.png";
+const removeImg = "images/remove.png";
 
 let restaurants = [];
 
@@ -39,7 +39,8 @@ function init(){
 			);
 		}
 	};
-	xhttp.open("GET", "/restaurants/names.json", true);
+	xhttp.open("GET", "/restaurants", true);
+	xhttp.setRequestHeader("Accept", "application/json");
 	xhttp.send();
 
 	document.getElementById("submitButton").addEventListener("click", ()=>order(null));
@@ -58,12 +59,13 @@ function updateDropdown(restaurants){
 
 	clearNode(dropdown);
 
-	restaurants.forEach((restaurant)=>{ //populate the dropdown with restaurants
+	for(let index in restaurants){ //populate the dropdown with restaurants
+		let restaurant = restaurants[index];
 		let newNode = document.createElement("p");
 		newNode.innerText = restaurant.name;
-		newNode.addEventListener("click", ()=>selectRestaurant(restaurant.name));
+		newNode.addEventListener("click", ()=>selectRestaurant(restaurant.id));
 		dropdown.appendChild(newNode);
-	});
+	}
 }
 
 /*
@@ -73,9 +75,9 @@ function updateDropdown(restaurants){
  * Params:
  *   String restaurantName: The name of the selected restaurant.
  * */
-function selectRestaurant(restaurantName){
+function selectRestaurant(restaurantId){
 	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
-		(document.getElementById("restaurantName") === restaurantName.name ||
+		(document.getElementById("restaurantName") === restaurantId.name ||
 			!confirm("Are you sure? You will lose your current order."))){
 		return;
 	}
@@ -95,7 +97,8 @@ function selectRestaurant(restaurantName){
 			renderContent(restaurant);
 		}
 	};
-	xhttp.open("GET", `/restaurants?name=${restaurantName}`, true);
+	xhttp.open("GET", `/restaurants/${restaurantId}`, true);
+	xhttp.setRequestHeader("Accept", "application/json");
 	xhttp.send();
 }
 
@@ -294,7 +297,7 @@ function filterDropdown(restaurants){
  * logic for clicking the submit button
  *
  * Params:
- *	Object restaurant: the restaurant object to be rendered.
+ *	Object restaurant: the restaurant being ordered from.
  * */
 function order(restaurant){
 	if(restaurant === null){
@@ -315,11 +318,18 @@ function order(restaurant){
 					resetPage();
 				}else if(xhttp.status === 500){
 					alert("Internal Server Error\nPlease Try Again");
+				}else{
+					alert("Something went Wrong\nPlease Try Again Later");
 				}
 			}
 		};
-		xhttp.open("POST", `order/submit?restaurant=${restaurant.name}&total=${total}`, true);
-		xhttp.send(JSON.stringify(orderData));
+		xhttp.open("POST", `order/submit`, true);
+		xhttp.send(JSON.stringify({
+			id: restaurant.id,
+		  	order: orderData
+		}));
+		console.log(restaurant);//TEMP
+		console.log(orderData);//TEMP
 	}else{
 		alert(`Please order at least \$${restaurant.min_order} to submit`);
 	}

@@ -7,16 +7,15 @@ router.get("/", respond);
 
 function respond(request, response, next){
 	response.format({
-		"text/html": function(){
+		"text/html": ()=>{
 			response.render(
 				"stats",
 				{
-					title: "Order Statistics",
-					orderStats: Object.values(response.locals.orderStats)
+					orderStats: Object.values(response.app.locals.orderStats)
 				});
 		},
-		"application/json": function(){
-			response.json(JSON.stringify(response.locals.orderStats));
+		"application/json": ()=>{
+			response.json(JSON.stringify(response.app.locals.orderStats));
 		}
 	});
 

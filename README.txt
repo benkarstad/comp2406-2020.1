@@ -4,7 +4,7 @@ COMP 2406A assignment 1 Submission:
         package.json
         package-lock.json
         server.js
-        client.js
+        order.js
         contentTypes.json
         index.njk
         order.njk

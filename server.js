@@ -2,49 +2,48 @@ function init(){
 	const
 		express = require("express"),
 		fs = require("fs"),
+		njk = require("nunjucks"),
 
 		config = require("./config.json"),
 
-		app = express(),
+		app = express();
 
-		njk = require("nunjucks");
+	let requestId = 0;
+	app.locals.restaurants = {};
+	app.locals.orderStats = {};
 
-	let restaurants = [];
-	let orderStats = [];
-
+	//load all the restaurant data into memory
 	fs.readdir("restaurants/", (up, files)=>{
 		for(let index in files){
 			fs.readFile(`restaurants/${files[index]}`,
 						(up, data)=>{
-							restaurants.push(JSON.parse(data));
+							let restaurant = JSON.parse(data);
+							app.locals.restaurants[restaurant.id] = restaurant;
 						});
 		}
-
 		app.listen(config.port);
 		console.log(`Server listening at http://localhost:${config.port}`);
 	});
 
-	njk.configure('views', {
-		express: app
-	});
+	njk.configure('views',{express: app});
 
 	app.set("view engine", "njk");
 
 	app.use((request, response, next)=>{ //log request info
-		console.log(`${request.method} request for ${request.url}`);
+		response.locals.requestId = ++requestId;
+		console.log(`${response.locals.requestId}: ${request.method} request for ${request.url}`);
 		next();
 	}); //log request information to console
-	app.use(/^\/(index)?$/, require(`./${config.routerDir}/index_router`)); //serve homepage
-	app.use(/^\/order/, require(`./${config.routerDir}/order_router`)); //serve order form
-	app.use(/^\/stats/,
-			(request, response, next)=>{
-				response.locals.orderStats = orderStats;
-				next();
-			}, //pass orderStats to stats_router
-			require(`./${config.routerDir}/stats_router`) //serve stats page
-	);
-	app.use("/restaurants", require(`./${config.routerDir}/restaurants_router`));
-	app.use("/addrestaurant", require(`./${config.routerDir}/addrestaurant_router`));
+	app.use(/^\/$/, require(`./${config.routerDir}/index_router`)); //serve homepage
+	app.use(/^\/order/, require(`./${config.routerDir}/order_router`)); //serve order form and accept orders
+	app.use(/^\/stats/, require(`./${config.routerDir}/stats_router`)); //serve stats page
+	app.use("/restaurants", require(`./${config.routerDir}/restaurants_router`)); //serve restaurant information
+	app.use("/addrestaurant", require(`./${config.routerDir}/addrestaurant_router`)); //add restaurant information
+	app.use(express.static(config.publicDir)); //serve static server assets
+	app.use((request, response, next)=>{
+		console.log(`${response.locals.requestId}: Completed with status code ${response.statusCode}`);
+		next();
+	}) //log end of request to console
 }
 
 init();
@@ -101,9 +100,10 @@ const responses = {
 					}
 
 					//update most purchased item
-					restaurant.favItem = Object.getOwnPropertyNames(restaurant.itemsOrdered).reduce((acc, cur, ind, arr)=>{
-						return restaurant.itemsOrdered[cur]>restaurant.itemsOrdered[acc] ? cur : acc;
-					});
+					restaurant.favItem = Object.getOwnPropertyNames(restaurant.itemsOrdered)
+						.reduce((acc, cur, ind, arr)=>{
+							return restaurant.itemsOrdered[cur]>restaurant.itemsOrdered[acc] ? cur : acc;
+						});
 					response.statusCode = 200;
 					response.end(JSON.stringify({orderID: restaurant.orderCount}));
 				}
