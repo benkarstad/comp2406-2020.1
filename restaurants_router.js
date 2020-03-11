@@ -11,12 +11,7 @@ router.get("/:id",
 
 function getRestaurant(request, response, next){
 	let idParam = parseInt(request.params.id);
-	for(index in response.app.locals.restaurants){
-		if(response.app.locals.restaurants[index].id === idParam){
-			response.locals.restaurantData = response.app.locals.restaurants[index];
-			break
-		}
-	}
+		response.locals.restaurantData = response.app.locals.restaurants[idParam];
 	next();
 }
 
@@ -24,8 +19,20 @@ function respondRestaurant(requent, response, next){
 	response.format({
 		"text/html": ()=>{
 			response.render(
-				"restaurantData",
-				{restaurantData: response.locals.restaurantData});
+				"restaurant",
+				{
+					restaurant: {
+						name: response.locals.restaurantData.name,
+						min_order: response.locals.restaurantData.min_order,
+						delivery_fee: response.locals.restaurantData.delivery_fee
+					},
+					menu: response.locals.restaurantData.menu.reduce((menuObj, item, index)=>{
+						menuObj[item.category] === undefined ?
+							menuObj[item.category] = [item] :
+							menuObj[item.category].push(item);
+						return menuObj;
+					}, {})
+				});
 		},
 		"application/json": ()=>{
 			response.status(200).json(response.locals.restaurantData);

@@ -10,13 +10,9 @@ let currentOrder = {
 	amounts: [],
 	subtotal: 0,
 	export: function(){
-		let output = [];
+		let output = {};
 		for(let i = 0; i<this.items.length; i++){
-			output.push(
-				{
-					item: this.items[i].name,
-					amount: this.amounts[i]
-				});
+			output[this.items[i].name] = this.amounts[i];
 		}
 		return output;
 	}
@@ -43,7 +39,7 @@ function init(){
 	xhttp.setRequestHeader("Accept", "application/json");
 	xhttp.send();
 
-	document.getElementById("submitButton").addEventListener("click", ()=>order(null));
+	document.getElementById("submitButton").addEventListener("click", ()=>sendOrder(null));
 }
 
 /*
@@ -92,7 +88,7 @@ function selectRestaurant(restaurantId){
 				submitBtnClone = submitButton.cloneNode(true);
 			submitButton.parentNode.replaceChild(submitBtnClone, submitButton);
 
-			document.getElementById("submitButton").addEventListener("click", ()=>order(restaurant));
+			document.getElementById("submitButton").addEventListener("click", ()=>sendOrder(restaurant));
 
 			renderContent(restaurant);
 		}
@@ -299,7 +295,7 @@ function filterDropdown(restaurants){
  * Params:
  *	Object restaurant: the restaurant being ordered from.
  * */
-function order(restaurant){
+function sendOrder(restaurant){
 	if(restaurant === null){
 		alert("No Restaurant Selected");
 	}else if(currentOrder.subtotal>=restaurant.min_order){ //submit the order
@@ -308,7 +304,7 @@ function order(restaurant){
 		let deliveryFee = restaurant.delivery_fee.toFixed(2);
 		let total = parseFloat(parseFloat(subtotal) + parseFloat(taxes) + parseFloat(deliveryFee)).toFixed(2);
 
-		let orderData = currentOrder.export();
+		let items = currentOrder.export();
 		let xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = ()=>{
 			if(xhttp.readyState === 4){
@@ -323,13 +319,12 @@ function order(restaurant){
 				}
 			}
 		};
-		xhttp.open("POST", `order/submit`, true);
+		xhttp.open("POST", `/order/submit`, true);
+		xhttp.setRequestHeader("Content-Type", "application/json");
 		xhttp.send(JSON.stringify({
 			id: restaurant.id,
-		  	order: orderData
+		  	items: items
 		}));
-		console.log(restaurant);//TEMP
-		console.log(orderData);//TEMP
 	}else{
 		alert(`Please order at least \$${restaurant.min_order} to submit`);
 	}

@@ -40,10 +40,6 @@ function init(){
 	app.use("/restaurants", require(`./${config.routerDir}/restaurants_router`)); //serve restaurant information
 	app.use("/addrestaurant", require(`./${config.routerDir}/addrestaurant_router`)); //add restaurant information
 	app.use(express.static(config.publicDir)); //serve static server assets
-	app.use((request, response, next)=>{
-		console.log(`${response.locals.requestId}: Completed with status code ${response.statusCode}`);
-		next();
-	}) //log end of request to console
 }
 
 init();

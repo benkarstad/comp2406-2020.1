@@ -19,38 +19,38 @@ function submitOrder(request, response, next){//TODO: Fix submitOrder();
 	console.log(request.body);//TEMP
 	let id = request.body.id,
 		orderStats = response.app.locals.orderStats;
-	if(orderStats[id] === undefined){
+
+	if(orderStats[id] === undefined){ //create an object for that restaurant
 		orderStats[id] = {
 			id: id,
+			name: response.app.locals.restaurants[id].name,
 			orderCount: 0,
 			totalSum: 0,
 			avgOrder: 0,
 			favItem: "None Yet",
-			itemsOrdered: {}
+			items: {}
 		};
-		let stats = orderStats[id];
-		stats.totalSum += calcTotal(response.app.locals.restaurants[id], request.body.order);
-		stats.orderCount++;
-		stats.avgOrder = (stats.totalSum/stats.orderCount).toFixed(2);
-		for(let index in request.body.order){
-			let item = request.body.order[index];
-			stats.itemsOrdered[item.item] === undefined ?
-				stats.itemsOrdered[item.item] = item.amount :
-				stats.itemsOrdered[item.item] += item.amount;
-		} //add each item's count to orderStats;
-
-		console.log(stats);//TEMP
-
-		//update most purchased item
-		stats.favItem = Object.getOwnPropertyNames(stats.itemsOrdered)
-			.reduce((acc, cur, ind, arr)=>{
-				return stats.itemsOrdered[cur]>stats.itemsOrdered[acc] ? curr : acc;
-			});
-
-		console.log(orderStats);//TEMP
-		response.status(200).end();
-		next();
 	}
+	let stats = orderStats[id]; //stats for this restaurant
+	stats.totalSum += calcTotal(request.body, response.app.locals.restaurants[id]);
+	stats.orderCount++;
+	stats.avgOrder = (stats.totalSum/stats.orderCount).toFixed(2);
+	for(let item in request.body.items){
+		let amount = request.body.items[item];
+		stats.items[item] === undefined ?
+			stats.items[item] = amount :
+			stats.items[item] += amount;
+	} //add each item's count to orderStats;
+
+	//update most purchased item
+	stats.favItem = Object.getOwnPropertyNames(stats.items)
+		.reduce((acc, cur, ind, arr)=>{
+			return (stats.items[cur]>stats.items[acc] || stats.items[acc] === undefined) ? cur : acc;
+		}, "None Yet");
+
+	console.log(orderStats);//TEMP
+	response.status(200).json({orderID: stats.orderCount});
+	next();
 }
 
 /*
@@ -64,18 +64,20 @@ function submitOrder(request, response, next){//TODO: Fix submitOrder();
  *			...
  *		}
  * */
-function calcTotal(restaurant, order){
-	let total = 0;
-	for(let itemName in order){
-		for(let menuIndex in restaurant.menu){
-			let menuItem = restaurant.menu[menuIndex];
-			if(menuItem.name === itemName){
-				total += menuItem.price;
-				console.log(`\t${menuItem.price}`);//TEMP
+function calcTotal(order, restaurant){
+	let	items = order.items,
+		total = 0;
+	for(let itemName in items){ //for all ordered items...
+		for(let i in restaurant.menu){ //find it's price and add that to the total
+			let itemObj = restaurant.menu[i];
+			if(itemObj.name === itemName){
+				total += itemObj.price*items[itemName];
 				break
 			}
 		}
 	}
-	console.log(`-----------\n${total}`);//TEMP
+	total *= 1.1;
+	total += restaurant.delivery_fee;
+	return total;
 }
 module.exports = router;

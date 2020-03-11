@@ -1,0 +1,27 @@
+{% extends "templated_components/_skeleton.njk" %}
+{% set title = restaurant.name %}
+
+{% block initialize %}
+    <link rel="stylesheet" type="text/css" href="stylesheets/restaurant.css">
+{% endblock %}
+
+{% block body %}
+    <h2>{{ title }}</h2>
+    <h4>Delivery Fee: ${{ restaurant.delivery_fee }} | Minimum Order: ${{ restaurant.min_order }}</h4>
+    <div class="menu">
+        <h3>Menu:</h3>
+        {% for category, items in menu %}
+            <div class="category">
+                <h4>{{ category }}</h4>
+                {% for item in items %}
+                    <h5>{{ item.name }}: ${{ item.price }}</h5>
+                    <span>{{ item.description }}</span>
+                {% else %}
+                    <h5>None Available</h5>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h4>Nothing Available</h4>
+        {% endfor %}
+    </div>
+{% endblock %}
