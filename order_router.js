@@ -9,7 +9,7 @@ router.post("/submit", express.json(), submitOrder);
 function respondOrderPage(request, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render("order", {body: {onload: "init()"}})
+			response.render("order")
 		}
 	});
 	next();

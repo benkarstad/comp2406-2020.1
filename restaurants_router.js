@@ -3,19 +3,45 @@ const
 
 let router = express.Router();
 
+router.use(express.json()); //parse request json (if any)
+
 router.get(/^\/$/, respondNames); //serve list of restaurant names
-router.post(/^\/$/,
-			express.urlencoded({"extended": true}),
-			addRestaurant); //add the provided restaurant to the server
+router.post(/^\/$/, addRestaurant); //add the provided restaurant to the server
 
 router.get("/:id",
 		   getRestaurant, //retrieve and parse the data for the id'ed restaurant
 		   respondRestaurant); //serve the data for the id'ed restaurant
+router.put("/:id", updateRestaurant);
 
 function getRestaurant(request, response, next){
 	let idParam = parseInt(request.params.id);
 		response.locals.restaurantData = response.app.locals.restaurants[idParam];
 	next();
+}
+
+function addRestaurant(request, response, next){
+	console.log(request.body);//TEMP
+	let newId = ++response.app.locals.maxRestaurantId;
+	response.app.locals.restaurants[newId] = {
+		id: newId,
+		name: request.body.name,
+		min_order: request.body.min_order,
+		delivery_fee: request.body.delivery_fee,
+		menu: []
+	};
+	response.status(200).json(response.app.locals.restaurants[newId]);
+	//TODO: Redirect to restaurant page once complete
+}
+
+function updateRestaurant(request, response, next){
+	console.log(request.body);//TEMP
+
+	let id = request.params.id;
+	if(response.app.locals.restaurants[id] === undefined) next();
+	request.body.id = id;
+	response.app.locals.restaurants[id] = request.body;
+
+	response.status(200).end();
 }
 
 function respondRestaurant(requent, response, next){
@@ -64,20 +90,6 @@ function respondNames(request, response, next){
 		}
 	});
 	next();
-}
-
-function addRestaurant(request, response, next){
-	console.log(request.body);//TEMP
-	let newId = ++response.app.locals.maxRestaurantId;
-	response.app.locals.restaurants[newId] = {
-		id: newId,
-		name: request.body.name,
-		min_order: request.body.min_order,
-		delivery_fee: request.body.delivery_fee,
-		menu: []
-	};
-	response.status(200).json(response.app.locals.restaurants[newId]);
-	//TODO: Redirect to restaurant page once complete
 }
 
 module.exports = router;

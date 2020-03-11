@@ -8,7 +8,6 @@ function init(){
 
 		app = express();
 
-	let requestId = 0;
 	app.locals.restaurants = {};
 	app.locals.orderStats = {};
 	app.locals.maxRestaurantId = 0;
@@ -34,8 +33,7 @@ function init(){
 	app.set("view engine", "njk");
 
 	app.use((request, response, next)=>{ //log request info
-		response.locals.requestId = ++requestId;
-		console.log(`${response.locals.requestId}: ${request.method} request for ${request.url}`);
+		console.log(`${request.method} request for ${request.url}`);
 		next();
 	}); //log request information to console
 	app.use(/^\/$/, require(`./${config.routerDir}/index_router`)); //serve homepage
