@@ -4,6 +4,17 @@ const
 
 let router = express.Router();
 
-router.use((request, response, next)=>next());
+router.use(/^\/$/, sendForm);
+
+/*
+ * Sends the form for adding a new restaurant to the site.
+ * */
+function sendForm(request, response, next){
+	response.format({
+		"text/html": ()=>{
+			response.render("addrestaurant")
+		}
+	})
+}
 
 module.exports = router;

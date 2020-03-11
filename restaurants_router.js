@@ -4,6 +4,9 @@ const
 let router = express.Router();
 
 router.get(/^\/$/, respondNames); //serve list of restaurant names
+router.post(/^\/$/,
+			express.urlencoded({"extended": true}),
+			addRestaurant); //add the provided restaurant to the server
 
 router.get("/:id",
 		   getRestaurant, //retrieve and parse the data for the id'ed restaurant
@@ -61,6 +64,20 @@ function respondNames(request, response, next){
 		}
 	});
 	next();
+}
+
+function addRestaurant(request, response, next){
+	console.log(request.body);//TEMP
+	let newId = ++response.app.locals.maxRestaurantId;
+	response.app.locals.restaurants[newId] = {
+		id: newId,
+		name: request.body.name,
+		min_order: request.body.min_order,
+		delivery_fee: request.body.delivery_fee,
+		menu: []
+	};
+	response.status(200).json(response.app.locals.restaurants[newId]);
+	//TODO: Redirect to restaurant page once complete
 }
 
 module.exports = router;

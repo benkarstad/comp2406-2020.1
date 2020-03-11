@@ -11,6 +11,7 @@ function init(){
 	let requestId = 0;
 	app.locals.restaurants = {};
 	app.locals.orderStats = {};
+	app.locals.maxRestaurantId = 0;
 
 	//load all the restaurant data into memory
 	fs.readdir("restaurants/", (up, files)=>{
@@ -19,6 +20,9 @@ function init(){
 						(up, data)=>{
 							let restaurant = JSON.parse(data);
 							app.locals.restaurants[restaurant.id] = restaurant;
+							if(restaurant.id > app.locals.maxRestaurantId){
+								app.locals.maxRestaurantId = restaurant.id;
+							}
 						});
 		}
 		app.listen(config.port);

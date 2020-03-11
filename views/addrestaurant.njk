@@ -1,0 +1,22 @@
+{% extends "templated_components/_skeleton.njk" %}
+{% set title = "Add Restaurant" %}
+
+{% block initialize %}
+    {# <script src="scripts/addrestaurant.js"></script> #}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ title }}</h2>
+    <form action="/restaurants" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br>
+
+        <label for="delivery_fee">Delivery Fee:</label>
+        <input type="number" id="delivery_fee" name="delivery_fee"><br>
+
+        <label for="min_order">Minimum Order:</label>
+        <input type="number" id="min_order" name="min_order"><br>
+
+        <input type="submit" value="Add">
+    </form>
+{% endblock %}
