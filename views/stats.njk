@@ -2,6 +2,7 @@
 {% set title = "Order Statistics" %}
 
 {% block body %}
+<h1>{{ title }}</h1>
 {% for restaurant in orderStats %}
     <h2>{{ restaurant.name }}</h2>
     <h3>Favorite Item: {{ restaurant.favItem }}</h3>

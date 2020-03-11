@@ -28,5 +28,5 @@ COMP 2406A assignment 1 Submission:
         *.njk files are Nunjucks templates (https://mozilla.github.io/nunjucks/)
 
     Design Changes:
-        My page for each restaurant doesn't show the ID's of each menu item,
-            this is because I changed my data model, and it no longer has unique ID's for each item
+        My page for each restaurant doesn't show the ID's of each menu item, this is because I changed my data model, and it no longer has unique ID's for each item
+        Requesting JSON from "/restaurants" gives the the id's and names (not just id's) of each restaurant.

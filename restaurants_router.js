@@ -42,10 +42,10 @@ function respondRestaurant(requent, response, next){
 }
 
 function respondNames(request, response, next){
-	let names = [];
+	let names = {restaurants: []};
 	for(let key in response.app.locals.restaurants){
 
-		names.push({
+		names.restaurants.push({
 		  	id: response.app.locals.restaurants[key].id,
 			name: response.app.locals.restaurants[key].name
 		});
@@ -54,7 +54,7 @@ function respondNames(request, response, next){
 		"text/html": ()=>{
 			response.render(
 				"restaurantNames",
-				{restaurantNames: names});
+				{restaurantNames: names.restaurants});
 		},
 		"application/json": ()=>{
 			response.status(200).json(names);

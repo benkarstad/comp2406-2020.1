@@ -4,7 +4,7 @@ const
 let router = express.Router();
 
 router.get("/", respondOrderPage);
-router.post("/submit", express.json(), submitOrder); //TODO: receive order information
+router.post("/submit", express.json(), submitOrder);
 
 function respondOrderPage(request, response, next){
 	response.format({
@@ -15,8 +15,7 @@ function respondOrderPage(request, response, next){
 	next();
 }
 
-function submitOrder(request, response, next){//TODO: Fix submitOrder();
-	console.log(request.body);//TEMP
+function submitOrder(request, response, next){
 	let id = request.body.id,
 		orderStats = response.app.locals.orderStats;
 
@@ -48,7 +47,6 @@ function submitOrder(request, response, next){//TODO: Fix submitOrder();
 			return (stats.items[cur]>stats.items[acc] || stats.items[acc] === undefined) ? cur : acc;
 		}, "None Yet");
 
-	console.log(orderStats);//TEMP
 	response.status(200).json({orderID: stats.orderCount});
 	next();
 }

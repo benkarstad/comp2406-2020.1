@@ -28,7 +28,7 @@ function init(){
 		//requests an array of restaurant objects with just the name
 		//full restaurant data will be requested once selected
 		if(xhttp.readyState === 4 && xhttp.status === 200){
-			let restaurants = JSON.parse(xhttp.responseText);
+			let restaurants = JSON.parse(xhttp.responseText).restaurants;
 			updateDropdown(restaurants);
 			document.getElementById("searchBox").addEventListener(
 				"keyup", ()=>filterDropdown(restaurants)
