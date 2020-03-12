@@ -1,13 +1,15 @@
 {% extends "templated_components/_skeleton.njk" %}
+{% set onload = init %}
 {% set title = restaurant.name %}
-
 {% block initialize %}
-    <link rel="stylesheet" type="text/css" href="stylesheets/restaurant.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/restaurant.css">
+    <script src="/scripts/restaurant.js"></script>
 {% endblock %}
 
 {% block body %}
-    <h2>{{ title }}</h2>
-    <h4>Delivery Fee: ${{ restaurant.delivery_fee }} | Minimum Order: ${{ restaurant.min_order }}</h4>
+    <h2 onclick="edit('name')"><span id="name">{{ restaurant.name }}</span></h2>
+    <h4 onclick="edit('delivery_fee')">Delivery Fee: $<span id="delivery_fee">{{ restaurant.delivery_fee }}</span></h4>
+    <h4 onclick="edit('min_order')">Minimum Order: $<span id="min_order">{{ restaurant.min_order }}</span></h4>
     <div class="menu">
         <h3>Menu:</h3>
         {% for category, items in menu %}
@@ -16,12 +18,13 @@
                 {% for item in items %}
                     <h5>{{ item.name }}: ${{ item.price }}</h5>
                     <span>{{ item.description }}</span>
-                {% else %}
-                    <h5>None Available</h5>
                 {% endfor %}
             </div>
         {% else %}
             <h4>Nothing Available</h4>
         {% endfor %}
     </div>
+    <input type="text" id="newCategory">
+    <button onclick="addCategory()">Add Category</button><br>
+    <button onclick="save()">Save</button>
 {% endblock %}
