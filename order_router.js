@@ -12,7 +12,6 @@ function respondOrderPage(request, response, next){
 			response.render("order")
 		}
 	});
-	next();
 }
 
 function submitOrder(request, response, next){
@@ -48,7 +47,6 @@ function submitOrder(request, response, next){
 		}, "None Yet");
 
 	response.status(200).json({orderID: stats.orderCount});
-	next();
 }
 
 /*

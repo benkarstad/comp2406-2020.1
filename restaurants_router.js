@@ -20,7 +20,13 @@ function getRestaurant(request, response, next){
 }
 
 function addRestaurant(request, response, next){
-	console.log(request.body);//TEMP
+	if( request.body.name === undefined || //sends 400 error if information is missing
+		request.body.min_order === undefined ||
+		request.body.delivery_fee === undefined)
+	{
+		response.status(400).end();
+		return
+	}
 	let newId = ++response.app.locals.maxRestaurantId;
 	response.app.locals.restaurants[newId] = {
 		id: newId,
@@ -30,12 +36,9 @@ function addRestaurant(request, response, next){
 		menu: []
 	};
 	response.status(200).json(response.app.locals.restaurants[newId]);
-	//TODO: Redirect to restaurant page once complete
 }
 
 function updateRestaurant(request, response, next){
-	console.log(request.body);//TEMP
-
 	let id = request.params.id;
 	if(response.app.locals.restaurants[id] === undefined) next();
 	request.body.id = id;
@@ -67,7 +70,6 @@ function respondRestaurant(requent, response, next){
 			response.status(200).json(response.locals.restaurantData);
 		}
 	});
-	next();
 }
 
 function respondNames(request, response, next){
@@ -89,7 +91,6 @@ function respondNames(request, response, next){
 			response.status(200).json(names);
 		}
 	});
-	next();
 }
 
 module.exports = router;

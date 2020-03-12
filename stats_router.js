@@ -18,7 +18,5 @@ function respond(request, response, next){
 			response.json(JSON.stringify(response.app.locals.orderStats));
 		}
 	});
-
-	next();
 }
 module.exports = router;

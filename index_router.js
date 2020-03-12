@@ -11,7 +11,6 @@ function respond(request, response, next){
 			response.render("index", {title: "Welcome to MealMobile"});
 		}
 	});
-	next();
 }
 
 module.exports = router;
