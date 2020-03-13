@@ -1,20 +1,53 @@
 COMP 2406A assignment 1 Submission:
     Included Files:
-        README.txt
-        package.json
-        package-lock.json
-        server.js
-        order.js
-        contentTypes.json
-        index.njk
-        order.njk
-	    stats.njk
-        styles.css
-        add.png
-        remove.png
-
-        templated_components/*.njk
-        restaurants/*.json
+    .
+    │   addrestaurant_router.js
+    │   config.json
+    │   contentTypes.json
+    │   index_router.js
+    │   order_router.js
+    │   package-lock.json
+    │   package.json
+    │   README.txt
+    │   restaurants_router.js
+    │   server.js
+    │   stats_router.js
+    │
+    ├───public
+    │   ├───images
+    │   │       add.png
+    │   │       remove.png
+    │   │
+    │   ├───scripts
+    │   │       addrestaurant.js
+    │   │       editRestaurant.js
+    │   │       order.js
+    │   │
+    │   └───stylesheets
+    │           editRestaurant.css
+    │           order.css
+    │           restaurant.css
+    │           styles.css
+    │
+    ├───restaurants
+    │       aragorn.json
+    │       frodo.json
+    │       legolas.json
+    │
+    └───views
+        │   addrestaurant.njk
+        │   editRestaurant.njk
+        │   error.njk
+        │   index.njk
+        │   order.njk
+        │   restaurant.njk
+        │   restaurantNames.njk
+        │   stats.njk
+        │
+        └───templated_components
+                _footer.njk
+                _header.njk
+                _skeleton.njk
 
     Execution Instructions:
         commands:
