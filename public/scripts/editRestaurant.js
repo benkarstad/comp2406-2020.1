@@ -34,6 +34,7 @@ function init(id){
 
 /*
  * Takes data from the page and creates a new category
+ * updates restaurant to match
  * */
 function addCategory(){
 	let newCategoryElem = document.getElementById("newCategory"),
@@ -49,6 +50,7 @@ function addCategory(){
 
 /*
  * Creates a new Item and adds it to the specified Category
+ * updates restaurant to match
  * */
 function addItem(){
 	let nameElem = document.getElementById("newItemName"),
@@ -58,7 +60,7 @@ function addItem(){
 
 		name = nameElem.value,
 		description = descriptionElem.value,
-		price = priceElem.value,
+		price = parseFloat(priceElem.value),
 		category = categoryElem.value,
 
 		itemObj = {
@@ -75,9 +77,8 @@ function addItem(){
 function save(){
 	//pull new data from page
 	restaurant.name = document.getElementById("name").value;
-	restaurant.delivery_fee = document.getElementById("delivery_fee").value;
-	restaurant.min_order = document.getElementById("min_order").value;
-	console.log(restaurant);//TEMP
+	restaurant.delivery_fee = parseFloat(document.getElementById("delivery_fee").value);
+	restaurant.min_order = parseFloat(document.getElementById("min_order").value);
 
 	//send saved data to server
 	let xhttp = new XMLHttpRequest();

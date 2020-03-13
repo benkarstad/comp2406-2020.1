@@ -42,7 +42,7 @@ function addRestaurant(request, response, next){
 }
 
 function updateRestaurant(request, response, next){
-	let id = request.params.id;
+	let id = parseInt(request.params.id);
 	if(response.app.locals.restaurants[id] === undefined){
 		response.status(404).send(`Restaurant ID:${id} does not exist.`);
 	}
@@ -64,7 +64,7 @@ function respondRestaurant(requent, response, next){
 						min_order: response.locals.restaurantData.min_order,
 						delivery_fee: response.locals.restaurantData.delivery_fee
 					},
-					menu: response.locals.restaurantData.menu.reduce((menuObj, item, index)=>{
+					menu: response.locals.restaurantData.menu.reduce((menuObj, item)=>{
 						menuObj[item.category] === undefined ?
 							menuObj[item.category] = [item] :
 							menuObj[item.category].push(item);
@@ -111,7 +111,7 @@ function respondEdit(request, response, next){
 }
 
 function getCategories(menuArray){
-	return menuArray.reduce((catArray, item, index)=>{
+	return menuArray.reduce((catArray, item)=>{
 			if(catArray.includes(item.category) === false)
 				catArray.push(item.category);
 			return catArray;

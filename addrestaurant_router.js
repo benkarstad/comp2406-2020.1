@@ -1,4 +1,3 @@
-//TODO: addrestaurant_router.js
 const
 	express = require("express");
 
