@@ -28,8 +28,8 @@ function init(){
 		console.log(`Server listening at http://localhost:${config.port}`);
 	});
 
-	njk.configure('views',{express: app});
-
+	//configure express to use nunjucks
+	njk.configure("views",{express: app});
 	app.set("view engine", "njk");
 
 	app.use((request, response, next)=>{ //log request info

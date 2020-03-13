@@ -5,28 +5,36 @@ let restaurant,
  * Requests restaurant data from the server and initializes
  *  */
 function init(id){
+	let restaurantXhttp = new XMLHttpRequest(),
+		categoriesXhttp = new XMLHttpRequest();
+	
 	//request restaurant info
-	let restaurantXhttp = new XMLHttpRequest();
 	restaurantXhttp.onreadystatechange = ()=>{
 		if(restaurantXhttp.readyState !== 4 || restaurantXhttp.status !== 200) return;
+		console.log(restaurantXhttp.responseText);//TEMP
 		restaurant = JSON.parse(restaurantXhttp.responseText);
+		console.log(restaurant);//TEMP
 		document.getElementById("name").value = restaurant.name;
 		document.getElementById("delivery_fee").value = parseFloat(restaurant.delivery_fee);
 		document.getElementById("min_order").value = parseFloat(restaurant.min_order);
+		
+		if(restaurant !== undefined && categories !== undefined) updateMenu();
 	};
-	restaurantXhttp.open("GET", `/restaurants/${id}`, true);
-	restaurantXhttp.setRequestHeader("Accept", "application/json");
-	restaurantXhttp.send();
 
 	//request list of categories
-	let categoriesXhttp = new XMLHttpRequest();
 	categoriesXhttp.onreadystatechange = ()=>{
 		if(categoriesXhttp.readyState !== 4 || categoriesXhttp.status !== 200) return;
 		categories = JSON.parse(categoriesXhttp.responseText);
-		updateMenu();
-
 		updateDropdown();
+		
+		if(restaurant !== undefined && categories !== undefined) updateMenu();
 	};
+	
+	//send requests
+	restaurantXhttp.open("GET", `/restaurants/${id}`, true);
+	restaurantXhttp.setRequestHeader("Accept", "application/json");
+	restaurantXhttp.send();
+	
 	categoriesXhttp.open("GET", `/restaurants/${id}/categories`, true);
 	categoriesXhttp.setRequestHeader("Accept", "application/json");
 	categoriesXhttp.send();
