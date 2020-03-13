@@ -5,17 +5,20 @@ let router = express.Router();
 
 router.use(express.json()); //parse request json (if any)
 
-router.get(/^\/$/, respondNames); //serve list of restaurant names
-router.post(/^\/$/, addRestaurant); //add the provided restaurant to the server
+router.get(["/:id", "/:id*"], getRestaurant); //retrieve and parse the data for the id'ed restaurant
+router.get("/:id/categories", respondCategories); //serve a more specific part of restaurants/:id
+router.get("/:id/edit", respondEdit);
+router.get("/:id", respondRestaurant); //serve the data for the id'ed restaurant
 
-router.get("/:id",
-		   getRestaurant, //retrieve and parse the data for the id'ed restaurant
-		   respondRestaurant); //serve the data for the id'ed restaurant
-router.put("/:id", updateRestaurant);
+router.put("/:id", updateRestaurant); //update restaurant/:id with new data
+
+router.get("/", respondNames); //serve list of restaurant names
+router.post("/", addRestaurant); //add the provided restaurant to the server
 
 function getRestaurant(request, response, next){
 	let idParam = parseInt(request.params.id);
 		response.locals.restaurantData = response.app.locals.restaurants[idParam];
+		if(response.locals.restaurantData === undefined) send404(request, response, next);
 	next();
 }
 
@@ -94,6 +97,42 @@ function respondNames(request, response, next){
 			response.status(200).json(names);
 		}
 	});
+}
+
+function respondCategories(request, response, next){
+	response.status(200).json(getCategories(response.locals.restaurantData.menu));
+}
+
+function respondEdit(request, response, next){
+	response.render("editRestaurant", {
+		title: `Edit ${response.locals.restaurantData.name}`,
+		id: response.locals.restaurantData.id
+	});
+}
+
+function getCategories(menuArray){
+	return menuArray.reduce((catArray, item, index)=>{
+			if(catArray.includes(item.category) === false)
+				catArray.push(item.category);
+			return catArray;
+	}, [])
+}
+
+function send404(request, response, next){
+	response.status(404);
+	response.format({
+						"text/html": ()=>{
+							response.render("error",
+											{
+												statusCode: 404,
+												message: `Page ${request.url} not found.`
+											});
+						},
+						"text/plain": ()=>{
+							response.send(`404: ${request.url} not found`).end();
+						},
+						"default": ()=>{response.end();}
+					})
 }
 
 module.exports = router;

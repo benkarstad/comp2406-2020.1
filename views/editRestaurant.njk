@@ -1,0 +1,50 @@
+{% extends "templated_components/_skeleton.njk" %}
+{#
+    Params:
+        title,
+        id
+#}
+{% set onload = "init(" ~ id ~ ")" %}
+{% block initialize %}
+<link rel="stylesheet" type="text/css" href="/stylesheets/editRestaurant.css">
+<script src="/scripts/editRestaurant.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>
+        <label for="name">Name: </label>
+        <input type="text" id="name">
+    </h1>
+    <h3>
+        <label for="delivery_fee">Delivery Fee: $</label>
+        <input type="number" id="delivery_fee">
+    </h3>
+    <h3>
+        <label for="min_order">Minimum Order: $</label>
+        <input type="number" id="min_order">
+    </h3>
+
+    <h2>Menu</h2>
+    <div id="menu"></div>
+
+    <label for="newCategory"><h2>New Category</h2></label>
+        <input type="text" id="newCategory">
+        <button onclick="addCategory()">Add Category</button><br>
+
+    <h2>New Item</h2>
+        <label for="newItemName">Name: </label>
+        <input type="text" id="newItemName"><br>
+
+        <label for="newItemPrice">Price: </label>
+        <input type="number" id="newItemPrice"><br>
+
+        <label for="newItemDescription">Description: </label>
+        <textarea id="newItemDescription"></textarea><br>
+
+        <label for="newItemCategory">Category</label>
+        <select id="newItemCategory"></select>
+        <button onclick="addItem()">Add Item</button><br>
+
+    <button onclick="save()">Save</button>
+
+{% endblock %}
