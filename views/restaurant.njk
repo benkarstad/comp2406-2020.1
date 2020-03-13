@@ -1,5 +1,5 @@
 {% extends "templated_components/_skeleton.njk" %}
-{% set onload = init %}
+{% set onload = "init()" %}
 {% set title = restaurant.name %}
 {% block initialize %}
     <link rel="stylesheet" type="text/css" href="/stylesheets/restaurant.css">
@@ -7,24 +7,41 @@
 {% endblock %}
 
 {% block body %}
-    <h2 onclick="edit('name')"><span id="name">{{ restaurant.name }}</span></h2>
-    <h4 onclick="edit('delivery_fee')">Delivery Fee: $<span id="delivery_fee">{{ restaurant.delivery_fee }}</span></h4>
-    <h4 onclick="edit('min_order')">Minimum Order: $<span id="min_order">{{ restaurant.min_order }}</span></h4>
-    <div class="menu">
-        <h3>Menu:</h3>
+	<h2>ID: <span id="id">{{ restaurant.id }}</span></h2>
+    <h1 onclick="edit('name')" onkeydown="endEdit(event, 'name')"><span id="name">{{ restaurant.name }}</span></h1>
+    <h3 onclick="edit('delivery_fee')" onkeydown="endEdit(event, 'delivery_fee')">Delivery Fee: $<span id="delivery_fee">{{ restaurant.delivery_fee }}</span></h3>
+    <h3 onclick="edit('min_order')" onkeydown="endEdit(event, 'min_order')">Minimum Order: $<span id="min_order">{{ restaurant.min_order }}</span></h3>
+    <div id="menu">
+        <h2>Menu:</h2>
         {% for category, items in menu %}
-            <div class="category">
-                <h4>{{ category }}</h4>
+            <div class="category" id="{{ category }}">
+                <h3>{{ category }}</h3>
                 {% for item in items %}
-                    <h5>{{ item.name }}: ${{ item.price }}</h5>
+                    <h4>{{ item.name }}: ${{ item.price }}</h4>
                     <span>{{ item.description }}</span>
                 {% endfor %}
             </div>
-        {% else %}
-            <h4>Nothing Available</h4>
         {% endfor %}
     </div>
+
+	<h2>New Category</h2>
     <input type="text" id="newCategory">
-    <button onclick="addCategory()">Add Category</button><br>
+	<button onclick="addCategory()">Add Category</button><br>
+
+	<h2>New Item</h2>
+	<label for="newItemName">Name: </label>
+		<input type="text" id="newItemName"><br>
+
+	<label for="newItemPrice">Price: </label>
+		<input type="text" id="newItemPrice"><br>
+
+	<label for="newItemDescription">Description: </label>
+		<textarea id="newItemDescription">Description</textarea><br>
+
+	<label for="newItemCategory">Category</label><select id="newItemCategory">
+		{% for category, items in menu %}
+			<option value="{{ category }}">{{category}}</option>
+		{% endfor %}
+	</select>
     <button onclick="save()">Save</button>
 {% endblock %}

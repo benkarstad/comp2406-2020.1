@@ -40,7 +40,9 @@ function addRestaurant(request, response, next){
 
 function updateRestaurant(request, response, next){
 	let id = request.params.id;
-	if(response.app.locals.restaurants[id] === undefined) next();
+	if(response.app.locals.restaurants[id] === undefined){
+		response.status(404).send(`Restaurant ID:${id} does not exist.`);
+	}
 	request.body.id = id;
 	response.app.locals.restaurants[id] = request.body;
 
@@ -54,6 +56,7 @@ function respondRestaurant(requent, response, next){
 				"restaurant",
 				{
 					restaurant: {
+						id: response.locals.restaurantData.id,
 						name: response.locals.restaurantData.name,
 						min_order: response.locals.restaurantData.min_order,
 						delivery_fee: response.locals.restaurantData.delivery_fee

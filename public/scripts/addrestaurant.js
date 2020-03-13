@@ -20,6 +20,5 @@ function submit(){
 }
 
 function redirect(id){
-	console.log("Redirecting");//TEMP
 	window.location.replace(`/restaurants/${id}`)
 }

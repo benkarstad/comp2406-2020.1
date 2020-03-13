@@ -3,7 +3,7 @@ const
 
 let router = express.Router();
 
-router.use("/", respond);
+router.get("/", respond);
 
 function respond(request, response, next){
 	response.format({
