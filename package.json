@@ -19,6 +19,7 @@
   "homepage": "https://github.com/theArcticGiant/comp2406-2020.1#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^3.5.5",
     "nunjucks": "^3.2.0"
   }
 }

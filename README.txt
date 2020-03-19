@@ -1,4 +1,4 @@
-COMP 2406A assignment 3 Submission:
+COMP 2406A assignment 3 Submission: TODO: Update README and redo file tree before submitting A4
     Included Files:
     .
     │   addrestaurant_router.js
@@ -52,7 +52,8 @@ COMP 2406A assignment 3 Submission:
     Execution Instructions:
         commands:
             npm install
-            node server.js
+            ./init.bat
+        two command prompts will open, for the database and server respectively
         navigate to "localhost:3000/" in the Google Chrome browser
 
     Notes/Additional Features:
