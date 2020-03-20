@@ -6,17 +6,21 @@ let router = express.Router();
 router.get("/", respond);
 
 function respond(request, response, next){
-	response.format({
-		"text/html": ()=>{
-			response.render(
-				"stats",
-				{
-					orderStats: Object.values(response.app.locals.orderStats)
-				});
-		},
-		"application/json": ()=>{
-			response.json(JSON.stringify(response.app.locals.orderStats));
-		}
-	});
+	response.app.locals.db.collections.stats
+		.find().toArray((up, result)=>{
+			if(up) next(up);
+			response.format({
+				"text/html": ()=>{
+					response.render(
+						"stats",
+						{
+							orderStats: result
+						});
+				},
+				"application/json": ()=>{
+					response.status(200).json(result);
+				}
+			});
+	})
 }
 module.exports = router;

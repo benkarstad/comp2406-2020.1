@@ -1,5 +1,6 @@
 const
 	express = require("express");
+	mongo = require("mongodb");
 
 let router = express.Router();
 
@@ -15,38 +16,55 @@ function respondOrderPage(request, response, next){
 }
 
 function submitOrder(request, response, next){
-	let id = request.body.id,
-		orderStats = response.app.locals.orderStats;
+	let _id = new mongo.ObjectID(request.body._id),
+		responseStats = request.body;
 
-	if(orderStats[id] === undefined){ //create an object for that restaurant
-		orderStats[id] = {
-			id: id,
-			name: response.app.locals.restaurants[id].name,
-			orderCount: 0,
-			totalSum: 0,
-			avgOrder: 0,
-			favItem: "None Yet",
-			items: {}
-		};
-	}
-	let stats = orderStats[id]; //stats for this restaurant
-	stats.totalSum += calcTotal(request.body, response.app.locals.restaurants[id]);
-	stats.orderCount++;
-	stats.avgOrder = (stats.totalSum/stats.orderCount).toFixed(2);
-	for(let item in request.body.items){
-		let amount = request.body.items[item];
-		stats.items[item] === undefined ?
-			stats.items[item] = amount :
-			stats.items[item] += amount;
-	} //add each item's count to orderStats;
+	Promise.all([
+		response.app.locals.db.collections.stats.findOne({_id}),
+		response.app.locals.db.collections.restaurants.findOne({_id})
+	]).then((result)=>{
+		if(result[1] === null){
+			next();
+			return;
+		}
 
-	//update most purchased item
-	stats.favItem = Object.getOwnPropertyNames(stats.items)
-		.reduce((acc, cur, ind, arr)=>{
-			return (stats.items[cur]>stats.items[acc] || stats.items[acc] === undefined) ? cur : acc;
-		}, "None Yet");
+		let orderTotal = calcTotal(request.body, result[1]);
 
-	response.status(200).json({orderID: stats.orderCount});
+		if(result[0] === null){
+			let statDoc = {
+				_id,
+				name: result[1].name,
+				orderCount: 0,
+				totalSum: orderTotal,
+				avgOrder: orderTotal.toFixed(2),
+				favItem: "None Yet",
+				items: {}
+			};
+			response.app.locals.db.collections.stats.insertOne(statDoc, (up, result)=>{
+				if(up) next(up);
+			});
+		}else{
+			result[0].orderCount++;
+			result[0].totalSum+=orderTotal;
+			result[0].avgOrder = (result[0].totalSum/result[0].orderCount).toFixed(2);
+			for(let item in responseStats.items){
+				let amount = responseStats.items[item];
+				result[0].items[item] === undefined ?
+					result[0].items[item] = amount :
+					result[0].items[item] += amount;
+			} //add each item's count to orderStats;
+
+			result[0].favItem = Object.getOwnPropertyNames(result[0].items)
+				.reduce((acc, cur, ind, arr)=>{
+					return (result[0].items[cur]>result[0].items[acc] || result[0].items[acc] === undefined) ? cur : acc;
+				}, "None Yet");
+
+			response.app.locals.db.collections.stats.findOneAndReplace({_id}, result[0], (up, result)=>{
+				if(up) next(up);
+			})
+		}
+		response.status(200).json({orderID: result[0].orderCount});
+	});
 }
 
 /*

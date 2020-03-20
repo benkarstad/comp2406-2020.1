@@ -4,7 +4,7 @@
         title,
         id
 #}
-{% set onload = "init(" ~ id ~ ")" %}
+{% set onload = "init('" ~ _id ~ "')" %}
 {% block initialize %}
 <link rel="stylesheet" type="text/css" href="/stylesheets/editRestaurant.css">
 <script src="/scripts/editRestaurant.js"></script>
@@ -24,13 +24,15 @@
         <input type="number" id="min_order">
     </h3>
 
-    <h2>Menu</h2>
+    <h2>Menu:</h2>
     <div id="menu"></div>
 
+    <hr/>
     <label for="newCategory"><h2>New Category</h2></label>
         <input type="text" id="newCategory">
         <button onclick="addCategory()">Add Category</button><br>
 
+    <hr/>
     <h2>New Item</h2>
         <label for="newItemName">Name: </label>
         <input type="text" id="newItemName"><br>
@@ -44,7 +46,7 @@
         <label for="newItemCategory">Category</label>
         <select id="newItemCategory"></select>
         <button onclick="addItem()">Add Item</button><br>
-
+    <hr/>
     <button onclick="save()">Save</button>
 
 {% endblock %}

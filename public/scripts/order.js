@@ -28,7 +28,7 @@ function init(){
 		//requests an array of restaurant objects with just the name
 		//full restaurant data will be requested once selected
 		if(xhttp.readyState === 4 && xhttp.status === 200){
-			let restaurants = JSON.parse(xhttp.responseText).restaurants;
+			let restaurants = JSON.parse(xhttp.responseText);
 			updateDropdown(restaurants);
 			document.getElementById("searchBox").addEventListener(
 				"keyup", ()=>filterDropdown(restaurants)
@@ -59,7 +59,7 @@ function updateDropdown(restaurants){
 		let restaurant = restaurants[index];
 		let newNode = document.createElement("p");
 		newNode.innerText = restaurant.name;
-		newNode.addEventListener("click", ()=>selectRestaurant(restaurant.id));
+		newNode.addEventListener("click", ()=>selectRestaurant(restaurant._id));
 		dropdown.appendChild(newNode);
 	}
 }
@@ -69,12 +69,11 @@ function updateDropdown(restaurants){
  * If order data would be lost in changing restaurants, prompts the user for confirmation
  *
  * Params:
- *   String restaurantName: The name of the selected restaurant.
+ *   String restaurantId: The id of the selected restaurant.
  * */
 function selectRestaurant(restaurantId){
 	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
-		(document.getElementById("restaurantName") === restaurantId.name ||
-			!confirm("Are you sure? You will lose your current order."))){
+		!confirm("Are you sure? You will lose your current order.")){
 		return;
 	}
 	resetPage();
@@ -308,8 +307,8 @@ function sendOrder(restaurant){
 		let xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = ()=>{
 			if(xhttp.readyState === 4){
-				let responseObj = JSON.parse(xhttp.responseText);
 				if(xhttp.status === 200){
+					let responseObj = JSON.parse(xhttp.responseText);
 					alert(`Order Submitted\nOrder ID: ${responseObj.orderID}`);
 					resetPage();
 				}else if(xhttp.status === 500){
@@ -322,7 +321,7 @@ function sendOrder(restaurant){
 		xhttp.open("POST", `/order/submit`, true);
 		xhttp.setRequestHeader("Content-Type", "application/json");
 		xhttp.send(JSON.stringify({
-			id: restaurant.id,
+			_id: restaurant._id,
 		  	items: items
 		}));
 	}else{

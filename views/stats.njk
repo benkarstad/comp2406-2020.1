@@ -4,6 +4,7 @@
 {% block body %}
 <h1>{{ title }}</h1>
 {% for restaurant in orderStats %}
+    <hr/>
     <h2>{{ restaurant.name }}</h2>
     <h3>Favorite Item: {{ restaurant.favItem }}</h3>
     <h3>Total Orders Submitted: {{ restaurant.orderCount }}</h3>

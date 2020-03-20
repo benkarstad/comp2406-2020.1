@@ -57,7 +57,6 @@ COMP 2406A assignment 3 Submission: TODO: Update README and redo file tree befor
         navigate to "localhost:3000/" in the Google Chrome browser
 
     Notes/Additional Features:
-        Implemented Order page from assignment 2
         *.njk files are Nunjucks templates (https://mozilla.github.io/nunjucks/)
 
     Design Changes:

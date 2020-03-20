@@ -1,5 +1,9 @@
 {
   "port": 3000,
   "routerDir": ".",
-  "publicDir": "public"
+  "publicDir": "public",
+  "db": {
+    "url": "mongodb://localhost:27017/",
+    "name": "mealMobile"
+  }
 }

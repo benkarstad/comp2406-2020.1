@@ -7,7 +7,7 @@ Context:
 {% block body %}
 <h2>Restaurants</h2>
 {% for restaurant in restaurantNames %}
-    <h3><a href="restaurants/{{restaurant.id}}">{{restaurant.name}}</a></h3>
+    <h3><a href="/restaurants/{{restaurant._id}}">{{restaurant.name}}</a></h3>
 {% else %}
     <h3>No Restaurants Available</h3>
 {% endfor %}

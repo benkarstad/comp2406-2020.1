@@ -6,7 +6,7 @@
 {% block body %}
     <h1 id="name">
         {{ restaurant.name }}
-        <button><a href="{{ restaurant.id }}/edit">Edit</a></button>
+        <button><a href="/restaurants/{{ restaurant._id }}/edit">Edit</a></button>
     </h1>
     <h3 id="delivery_fee">Delivery Fee: ${{ restaurant.delivery_fee }}</h3>
     <h3 id="min_order">Minimum Order: ${{ restaurant.min_order }}</h3>

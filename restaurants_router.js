@@ -1,7 +1,8 @@
 const
-	express = require("express");
+	express = require("express"),
+	mongo = require("mongodb"),
 
-let router = express.Router();
+	router = express.Router();
 
 router.use(express.json()); //parse request json (if any)
 
@@ -16,10 +17,16 @@ router.get("/", respondNames); //serve list of restaurant names
 router.post("/", addRestaurant); //add the provided restaurant to the server
 
 function getRestaurant(request, response, next){
-	let idParam = parseInt(request.params.id);
-		response.locals.restaurantData = response.app.locals.restaurants[idParam];
-		if(response.locals.restaurantData === undefined) send404(request, response, next);
-	next();
+	let idParam = new mongo.ObjectID(request.params.id);
+	response.app.locals.db.collections.restaurants.findOne({_id: idParam}, (up, result)=>{
+		if(up){
+			next(up);
+		}else{
+			response.locals.restaurantData = result;
+			if(response.locals.restaurantData === undefined) send404(request, response, next);
+			next();
+		}
+	});
 }
 
 function addRestaurant(request, response, next){
@@ -30,26 +37,30 @@ function addRestaurant(request, response, next){
 		response.status(400).end();
 		return
 	}
-	let newId = ++response.app.locals.maxRestaurantId;
-	response.app.locals.restaurants[newId] = {
-		id: newId,
+
+	let newRestaurant = {
 		name: request.body.name,
 		min_order: request.body.min_order,
 		delivery_fee: request.body.delivery_fee,
 		menu: []
 	};
-	response.status(200).json(response.app.locals.restaurants[newId]);
+	response.app.locals.db.collections.restaurants.insertOne(newRestaurant, (up, result)=>{
+		if(up){
+			next(up);
+		}else{
+			response.status(200).json(result.ops[0]);
+		}
+	});
 }
 
 function updateRestaurant(request, response, next){
-	let id = parseInt(request.params.id);
-	if(response.app.locals.restaurants[id] === undefined){
-		response.status(404).send(`Restaurant ID:${id} does not exist.`);
-	}
-	request.body.id = id;
-	response.app.locals.restaurants[id] = request.body;
-
-	response.status(200).end();
+	let id = new mongo.ObjectID(request.params.id);
+	delete request.body._id;
+	response.app.locals.db.collections.restaurants.findOneAndReplace({_id: id}, request.body, (up, result)=>{
+		if(up){
+			next(up);
+		}else response.status(200).end();
+	});
 }
 
 function respondRestaurant(requent, response, next){
@@ -59,7 +70,7 @@ function respondRestaurant(requent, response, next){
 				"restaurant",
 				{
 					restaurant: {
-						id: response.locals.restaurantData.id,
+						_id: response.locals.restaurantData._id,
 						name: response.locals.restaurantData.name,
 						min_order: response.locals.restaurantData.min_order,
 						delivery_fee: response.locals.restaurantData.delivery_fee
@@ -79,24 +90,24 @@ function respondRestaurant(requent, response, next){
 }
 
 function respondNames(request, response, next){
-	let names = {restaurants: []};
-	for(let key in response.app.locals.restaurants){
-
-		names.restaurants.push({
-		  	id: response.app.locals.restaurants[key].id,
-			name: response.app.locals.restaurants[key].name
-		});
-	}
-	response.format({
-		"text/html": ()=>{
-			response.render(
-				"restaurantNames",
-				{restaurantNames: names.restaurants});
-		},
-		"application/json": ()=>{
-			response.status(200).json(names);
+	response.app.locals.db.collections.restaurants
+		.find({}, {projection: {_id: 1, name: 1}}).toArray((up, result)=>{
+		if(up){
+			next(up);
+		}else{
+			console.log(result);//TEMP
+			response.format({
+				"text/html": ()=>{
+					response.render(
+						"restaurantNames",
+						{restaurantNames: result});
+				},
+				"application/json": ()=>{
+					response.status(200).json(result);
+				}
+			});
 		}
-	});
+	})
 }
 
 function respondCategories(request, response, next){
@@ -106,7 +117,7 @@ function respondCategories(request, response, next){
 function respondEdit(request, response, next){
 	response.render("editRestaurant", {
 		title: `Edit ${response.locals.restaurantData.name}`,
-		id: response.locals.restaurantData.id
+		_id: response.locals.restaurantData._id
 	});
 }
 

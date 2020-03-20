@@ -11,7 +11,6 @@ function init(id){
 	//request restaurant info
 	restaurantXhttp.onreadystatechange = ()=>{
 		if(restaurantXhttp.readyState !== 4 || restaurantXhttp.status !== 200) return;
-		console.log(restaurantXhttp.responseText);//TEMP
 		restaurant = JSON.parse(restaurantXhttp.responseText);
 		console.log(restaurant);//TEMP
 		document.getElementById("name").value = restaurant.name;
@@ -94,13 +93,13 @@ function save(){
 		if(xhttp.readyState === 4){
 			if(xhttp.status === 200){
 				alert("Saved Successfully");
-				window.location.replace(`/restaurants/${restaurant.id}`)
+				window.location.replace(`/restaurants/${restaurant._id}`)
 			} else{
 				alert(`${xhttp.status} | ${xhttp.responseText}`);
 			}
 		}
 	};
-	xhttp.open("PUT", `/restaurants/${restaurant.id}`, true);
+	xhttp.open("PUT", `/restaurants/${restaurant._id}`, true);
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.setRequestHeader("Accept", "text/plain");
 	xhttp.send(JSON.stringify(restaurant));

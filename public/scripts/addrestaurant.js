@@ -8,7 +8,7 @@ function submit(){
 	let xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = ()=>{
 		if(xhttp.readyState === 4 && xhttp.status === 200){
-			let newId = JSON.parse(xhttp.responseText).id;
+			let newId = JSON.parse(xhttp.responseText)._id;
 			redirect(newId);
 		}
 	};
