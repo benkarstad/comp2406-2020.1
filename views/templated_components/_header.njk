@@ -1,7 +1,42 @@
-<div id="header"> <!-- TODO: Update header -->
-    <a href="/">Homepage</a>
-    <a href="/order">Order Now</a>
-    <a href="/stats">Stats</a>
-    <a href="/restaurants">Restaurants</a>
-    <a href="/addrestaurant">Add Restaurant</a>
+<link rel="stylesheet" type="text/css" href="/stylesheets/dropdown.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+<div class="header"> <!-- TODO: Update header -->
+
+    <div class="dropdown">
+        <div class="dropdown-tile">
+            <a href="/"><i class="material-icons">home</i>Homepage</a>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <div class="dropdown-tile">
+            <i class="material-icons">fastfood</i>
+            <a href="/restaurants">Restaurants</a>
+        </div>
+        <div class="dropdown-content">
+            {% if loggedIn %}
+            <a href="/order">Place an Order</a>
+            {% endif %}
+            <a href="/stats">Stats</a>
+            <a href="/addrestaurant">Add Restaurant</a>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <div class="dropdown-tile">
+            <i class="material-icons">account_box</i>
+            {% if loggedIn %}
+            <a href="/profile">{{ user.name }}'s Profile</a>
+            {% else %}
+            <a href="/login">Log In</a>
+            {% endif %}
+        </div>
+        <div class="dropdown-content">
+        {% if loggedIn %}
+            <a href="/logout">Log Out</a>
+        {% else %}
+            <a href="/register">Register</a>
+        {% endif %}
+        </div>
+    </div>
 </div>

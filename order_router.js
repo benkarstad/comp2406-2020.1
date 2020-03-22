@@ -5,7 +5,7 @@ const
 let router = express.Router();
 
 router.get("/", respondOrderPage);
-router.post("/submit", express.json(), submitOrder);
+router.post("/submit", submitOrder);
 
 function respondOrderPage(request, response, next){
 	response.format({

@@ -57,6 +57,7 @@ COMP 2406A assignment 3 Submission: TODO: Update README and redo file tree befor
         navigate to "localhost:3000/" in the Google Chrome browser
 
     Notes/Additional Features:
+        Project makes use of Google's Material Icons Library (https://www.google.com/design/icons/)
         *.njk files are Nunjucks templates (https://mozilla.github.io/nunjucks/)
 
     Design Changes:

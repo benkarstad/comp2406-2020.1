@@ -1,5 +1,10 @@
 {% extends "templated_components/_skeleton.njk" %}
+{% set title = "Welcome to MealMobile" %}
 
 {% block body %}
 <h1>Welcome to MealMobile</h1>
+{% if not loggedIn %}
+    <hr>
+    {% include "templated_components/_userAuthForm.njk" %}
+{% endif %}
 {% endblock %}

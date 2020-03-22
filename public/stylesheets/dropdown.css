@@ -1,0 +1,32 @@
+.dropdown{
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-tile{
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+}
+
+.dropdown-content{
+    position: absolute;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: none;
+}
+
+.dropdown-content a:hover{
+    display: contents;
+}
+
+.dropdown:hover .dropdown-content{
+    display: flex;
+    flex-direction: column;
+    background-color: darkgrey;
+}
+
+.dropdown:hover .dropdown-tile{
+    background-color: #3e8e41;
+}

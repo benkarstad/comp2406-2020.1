@@ -8,7 +8,7 @@ router.get("/", respond);
 function respond(request, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render("index", {title: "Welcome to MealMobile"});
+			response.render("index");
 		}
 	});
 }

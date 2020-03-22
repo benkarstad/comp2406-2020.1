@@ -1,20 +1,21 @@
 const
 	express = require("express"),
-	fs = require("fs"),
 	mongo = require('mongodb'),
+	bodyParser = require("body-parser"),
+	cookieParser = require("cookie-parser"),
 	njk = require("nunjucks"),
+
+	status = require("./scripts/status"),
 
 	config = require("./config.json"),
 
 	mongoc = mongo.MongoClient;
+
 function init(){
-	const
+	const //create the app
 		app = express();
 
-	app.locals.restaurants = {};
-	app.locals.orderStats = {};
-	app.locals.maxRestaurantId = 0;
-
+	//connect and configure the mongoDataBase
 	mongoc.connect(config.db.url, (up, client)=>{
 		if(up) throw up;
 		else{
@@ -39,12 +40,19 @@ function init(){
 
 	//TODO: something about being logged in
 
-	//publicly available routes
 	app.use((request, response, next)=>{ //log request info
 		console.log(`${request.method} request for ${request.url}`);
 		next();
 	}); //log request information to console
+
+	//parse request data (if any)
+	app.use(bodyParser.json()); //json body
+	app.use(bodyParser.urlencoded({extended: true})); //urlencoded body
+	app.use(cookieParser()); //cookies
+
+	//route to various paths
 	app.use(/^\/$/, requireRouter("index_router")); //serve homepage
+	app.use(/^\/order/, requireRouter("order_router")); //serve order form and accept orders
 	app.use(/^\/stats/, requireRouter("stats_router")); //serve stats page
 	app.use(/^\/restaurants/, requireRouter("restaurants_router")); //serve restaurant information
 	app.use(/^\/addrestaurant/, requireRouter("addrestaurant_router")); //add restaurant information
@@ -52,32 +60,11 @@ function init(){
 	app.use(/^\/login/, requireRouter("login_router")); //login to an existing account
 	app.use(express.static(config.publicDir)); //serve static server assets
 
-
-	//routes only available to logged-in sessions
-	app.use(/^\/order/, requireRouter("order_router")); //serve order form and accept orders
-
-	app.use(send404);// send a 404 response if nothing is found
+	app.use(status.send404);// send a 404 response if nothing is found
 }
 
 function requireRouter(name){
 	return require(`./${config.routerDir}/${name}`);
-}
-
-function send404(request, response, next){
-	response.status(404);
-	response.format({
-		"text/html": ()=>{
-			response.render("error",
-				{
-					statusCode: 404,
-					message: `Page ${request.url} not found.`
-				});
-		},
-		"text/plain": ()=>{
-			response.send(`404: ${request.url} not found`).end();
-		},
-		"default": ()=>{response.end();}
-	})
 }
 
 init();

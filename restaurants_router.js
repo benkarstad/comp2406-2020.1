@@ -2,9 +2,9 @@ const
 	express = require("express"),
 	mongo = require("mongodb"),
 
-	router = express.Router();
+	status = require("./scripts/status"),
 
-router.use(express.json()); //parse request json (if any)
+	router = express.Router();
 
 router.get(["/:id", "/:id*"], getRestaurant); //retrieve and parse the data for the id'ed restaurant
 router.get("/:id/categories", respondCategories); //serve a more specific part of restaurants/:id
@@ -22,8 +22,8 @@ function getRestaurant(request, response, next){
 		if(up){
 			next(up);
 		}else{
+			if(result === null) status.send404(request, response, next);
 			response.locals.restaurantData = result;
-			if(response.locals.restaurantData === undefined) send404(request, response, next);
 			next();
 		}
 	});
@@ -127,23 +127,6 @@ function getCategories(menuArray){
 				catArray.push(item.category);
 			return catArray;
 	}, [])
-}
-
-function send404(request, response, next){
-	response.status(404);
-	response.format({
-						"text/html": ()=>{
-							response.render("error",
-											{
-												statusCode: 404,
-												message: `Page ${request.url} not found.`
-											});
-						},
-						"text/plain": ()=>{
-							response.send(`404: ${request.url} not found`).end();
-						},
-						"default": ()=>{response.end();}
-					})
 }
 
 module.exports = router;
