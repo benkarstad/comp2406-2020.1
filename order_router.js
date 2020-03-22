@@ -10,7 +10,10 @@ router.post("/submit", submitOrder);
 function respondOrderPage(request, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render("order")
+			response.render("order", {
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
+			})
 		}
 	});
 }

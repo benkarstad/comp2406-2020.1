@@ -11,7 +11,10 @@ router.use(/^\/$/, sendForm);
 function sendForm(request, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render("addrestaurant")
+			response.render("addrestaurant", {
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
+			})
 		}
 	})
 }

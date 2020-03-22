@@ -66,22 +66,22 @@ function updateRestaurant(request, response, next){
 function respondRestaurant(requent, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render(
-				"restaurant",
-				{
-					restaurant: {
-						_id: response.locals.restaurantData._id,
-						name: response.locals.restaurantData.name,
-						min_order: response.locals.restaurantData.min_order,
-						delivery_fee: response.locals.restaurantData.delivery_fee
-					},
-					menu: response.locals.restaurantData.menu.reduce((menuObj, item)=>{
-						menuObj[item.category] === undefined ?
-							menuObj[item.category] = [item] :
-							menuObj[item.category].push(item);
-						return menuObj;
-					}, {})
-				});
+			response.render("restaurant", {
+				restaurant: {
+					_id: response.locals.restaurantData._id,
+					name: response.locals.restaurantData.name,
+					min_order: response.locals.restaurantData.min_order,
+					delivery_fee: response.locals.restaurantData.delivery_fee
+				},
+				menu: response.locals.restaurantData.menu.reduce((menuObj, item)=>{
+					menuObj[item.category] === undefined ?
+						menuObj[item.category] = [item] :
+						menuObj[item.category].push(item);
+					return menuObj;
+				}, {}),
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
+			});
 		},
 		"application/json": ()=>{
 			response.status(200).json(response.locals.restaurantData);
@@ -98,9 +98,11 @@ function respondNames(request, response, next){
 			console.log(result);//TEMP
 			response.format({
 				"text/html": ()=>{
-					response.render(
-						"restaurantNames",
-						{restaurantNames: result});
+					response.render("restaurantNames", {
+						restaurantNames: result,
+						loggedIn: response.locals.user !== undefined,
+						user: response.locals.user
+					});
 				},
 				"application/json": ()=>{
 					response.status(200).json(result);
@@ -117,7 +119,9 @@ function respondCategories(request, response, next){
 function respondEdit(request, response, next){
 	response.render("editRestaurant", {
 		title: `Edit ${response.locals.restaurantData.name}`,
-		_id: response.locals.restaurantData._id
+		_id: response.locals.restaurantData._id,
+		loggedIn: response.locals.user !== undefined,
+		user: response.locals.user
 	});
 }
 

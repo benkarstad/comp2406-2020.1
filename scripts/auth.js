@@ -46,25 +46,31 @@ function validate(value, salt, hash){
 }
 
 /**
- * creates and stores a session token
+ * creates and stores a session token to be sent
  * @function
  * @param request
  * @param response
  * @param next
  * */
 function setToken(request, response, next){
+	const user = response.locals.user;
+	//verify an authenticated user exists
+	if(user === undefined) return next();
 	// Create a new JSON web-token
-	const token = jwt.sign({username: response.locals.user.username}, secretKey,{
+	const token = jwt.sign({username: user.username}, secretKey,{
 		algorithm: "HS256",
 		expiresIn: sessionTimeout
 	});
 
 	// set the cookie as the token string
 	response.cookie('token', token, { maxAge: sessionTimeout })
+
+	return next();
 }
 
 /**
  * verifies the validity of the current session token and retrieves the user data of the session owner
+ * if the token is valid, the user's info will be set in response.locals.user.
  * @function
  * @param request
  * @param response
@@ -75,7 +81,7 @@ function verifyToken(request, response, next){
 
 	// unset token === bad
 	if (!token){
-		return status.send401(request, response, next);
+		return next();
 	}
 
 	let payload;
@@ -84,8 +90,7 @@ function verifyToken(request, response, next){
 		payload = jwt.verify(token, secretKey);
 	} catch (up) {
 		if (up instanceof jwt.JsonWebTokenError) {
-			// if the error thrown is because the JWT is unauthorized, return a 401 error
-			return status.send401(request, response, next);
+			return next();
 		}
 		// otherwise, return a bad request error
 		return status.send400(request, response, next);
@@ -95,12 +100,16 @@ function verifyToken(request, response, next){
 	response.app.locals.db.collections.users.findOne({username: payload.username}).then(
 		(user)=>{
 			if(user === null){
-				return status.send401(request, response, next);
+				return next();
 			}
 			response.locals.user = user;
-			next();
+			return next();
 		}
 	)
+}
+
+function deleteToken(request, response, next){
+	
 }
 
 module.exports = {

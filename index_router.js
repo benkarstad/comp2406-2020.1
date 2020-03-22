@@ -8,7 +8,10 @@ router.get("/", respond);
 function respond(request, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render("index");
+			response.render("index", {
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
+			});
 		}
 	});
 }

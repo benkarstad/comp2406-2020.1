@@ -6,6 +6,7 @@ const
 	njk = require("nunjucks"),
 
 	status = require("./scripts/status"),
+	auth = require("./scripts/auth"),
 
 	config = require("./config.json"),
 
@@ -49,6 +50,10 @@ function init(){
 	app.use(bodyParser.json()); //json body
 	app.use(bodyParser.urlencoded({extended: true})); //urlencoded body
 	app.use(cookieParser()); //cookies
+
+	app.use(auth.verifyToken); //validate session token
+	app.use(auth.setToken); //provide an updated session token
+
 
 	//route to various paths
 	app.use(/^\/$/, requireRouter("index_router")); //serve homepage

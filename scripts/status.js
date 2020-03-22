@@ -14,7 +14,8 @@ function send400(request, response, next){
 		"text/html": ()=>{
 			response.render("error", {
 				statusCode: status,
-				message
+				message,
+				loggedIn: response.locals.user !== undefined
 			});
 		},
 		"text/plain": ()=>{
@@ -38,11 +39,11 @@ function send401(request, response, next){
 	response.status(status);
 	response.format({
 		"text/html": ()=>{
-			response.render("error",
-							{
-								statusCode: status,
-								message
-							});
+			response.render("error", {
+				statusCode: status,
+				message,
+				loggedIn: response.locals.user !== undefined
+			});
 		},
 		"text/plain": ()=>{
 			response.send(message).end();
@@ -61,11 +62,11 @@ function send404(request, response, next){
 	response.status(404);
 	response.format({
 		"text/html": ()=>{
-			response.render("error",
-							{
-								statusCode: 404,
-								message: `Page ${request.url} not found.`
-							});
+			response.render("error", {
+				statusCode: 404,
+				message: `Page ${request.url} not found.`,
+				loggedIn: response.locals.user !== undefined
+			});
 		},
 		"text/plain": ()=>{
 			response.send(`404: ${request.url} not found`).end();

@@ -16,13 +16,16 @@ router.post("/",
 			getUser,
 			authenticate,
 			auth.setToken,
-			(request, response, next)=>{response.status(200).json({_id: response.locals.user._id})}
+			status.send200
 		);
 
 function respondPage(request, response, next){
 	response.format({
 		"text/html": ()=>{
-			response.render("login")
+			response.render("login",{
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
+			})
 		}
 	})
 }
@@ -32,11 +35,10 @@ function getUser(request, response, next){
 	response.app.locals.db.collections.users.findOne({username}).then(
 		(result)=>{
 			if(result === null){
-				status.send401(request, response, next);
-				return
+				return status.send401(request, response, next);
 			}
 			response.locals.user = result;
-			next();
+			return next();
 		}
 	);
 }
@@ -53,12 +55,10 @@ function authenticate(request, response, next){
 		hashKey = auth.saltHash(secretKey, salt);
 
 	if(auth.validate(password, hashKey, passwordHash)){ //password is correct
-		next(); //proceed to token creation
+		return next(); //proceed to token creation
 	}else{ //password is incorrect
-		status.send401(request, response, next);
-		return
+		return status.send401(request, response, next);
 	}
-	next();
 }
 
 module.exports = router;

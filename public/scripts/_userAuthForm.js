@@ -11,9 +11,8 @@ function submitLogin(){
 
 	xhttp.onreadystatechange = ()=>{
 		if(xhttp.readyState === 4){
-			const response = JSON.parse(xhttp.responseText);
 			if(xhttp.status === 200){
-				window.location.replace(`/users/${response._id}`);
+				window.location.replace(`/profile`);
 			}
 			else if(xhttp.status === 401){
 				alert("Invalid Login Credentials")
