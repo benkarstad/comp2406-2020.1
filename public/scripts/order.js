@@ -83,7 +83,7 @@ function selectRestaurant(restaurantId){
 	xhttp.onreadystatechange = ()=>{
 		if(xhttp.readyState === 4 && xhttp.status === 200){
 			let restaurant = JSON.parse(xhttp.responseText);
-			var submitButton = document.getElementById("submitButton"),
+			let submitButton = document.getElementById("submitButton"),
 				submitBtnClone = submitButton.cloneNode(true);
 			submitButton.parentNode.replaceChild(submitBtnClone, submitButton);
 
