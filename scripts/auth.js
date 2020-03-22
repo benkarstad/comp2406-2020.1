@@ -63,7 +63,7 @@ function setToken(request, response, next){
 	});
 
 	// set the cookie as the token string
-	response.cookie('token', token, { maxAge: sessionTimeout })
+	response.cookie('token', token, { maxAge: sessionTimeout });
 
 	return next();
 }
@@ -106,10 +106,6 @@ function verifyToken(request, response, next){
 			return next();
 		}
 	)
-}
-
-function deleteToken(request, response, next){
-	
 }
 
 module.exports = {
