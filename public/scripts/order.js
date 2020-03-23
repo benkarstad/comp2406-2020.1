@@ -1,8 +1,5 @@
 //TODO: Use better for/forEach conventions.
 
-const addImg = "images/add.png";
-const removeImg = "images/remove.png";
-
 let restaurants = [];
 
 let currentOrder = {
@@ -111,15 +108,15 @@ function selectCategory(restaurant, categoryName){
 	for(let index in items){ //add each dish to the table
 		let dish = items[index];
 		let dishDiv = document.createElement("div");//the div for the whole entry
-		dishDiv.appendChild(document.createElement("h3")); //item name
-		dishDiv.lastChild.innerHTML = `${dish.name}<img class='addButton' src="${addImg}" alt="Add Item">`;
-		dishDiv.appendChild(document.createElement("span")); //item price
-		dishDiv.lastChild.innerText = `\$${dish.price.toFixed(2)}`;
-		dishDiv.lastChild.classList.add("priceTag");
-		dishDiv.appendChild(document.createElement("p")); //item description
-		dishDiv.lastChild.innerHTML = `<h5>${dish.description}</h5>`;
-		dishDiv.getElementsByClassName("addButton").item(0).addEventListener( //make it selectable
-																			  "click", ()=>addToCart(dish, 1, restaurant)
+
+		dishDiv.innerHTML =
+`<h3>${dish.name}<i class="addButton material-icons">add_circle_outline</i></h3>
+<span class="priceTag">\$${dish.price.toFixed(2)}</span>
+<p><h5>${dish.description}</h5></p>`;
+
+		dishDiv.getElementsByClassName("addButton")
+			.item(0).addEventListener( //make it selectable
+			  "click", ()=>addToCart(dish, 1, restaurant)
 		);
 		menuNode.appendChild(dishDiv);
 	}
@@ -254,17 +251,14 @@ function update(restaurant){
 	currentOrder.items.forEach((item, index)=>{ //add all ordered items to #order
 		let newNode = document.createElement("div");
 		let itemCount = currentOrder.amounts[index];
-		newNode.innerHTML = `${itemCount}x<h4>${item.name}</h4>`;
-		newNode.appendChild(document.createElement("span"));
-		newNode.lastChild.innerText = `\$${parseFloat(itemCount*item.price).toFixed(2)}`;
-		newNode.lastChild.classList.add("priceTag");
-		newNode.appendChild(document.createElement("img"));
-		newNode.lastChild.classList.add("removeButton");
-		newNode.lastChild.setAttribute("src", removeImg);
-		newNode.lastChild.setAttribute("alt", "Remove Item");
-		newNode.lastChild.addEventListener("click", ()=>{
-			addToCart(item, -1, restaurant);
-		});
+		newNode.innerHTML =
+`${itemCount}x<h4>${item.name}</h4>
+<span class="priceTag">\$${parseFloat(itemCount*item.price).toFixed(2)}</span>
+<i class="removeButton material-icons">remove_circle_outline</i>`;
+		newNode.getElementsByClassName("removeButton")
+			.item(0).addEventListener("click", ()=>{
+				addToCart(item, -1, restaurant);
+			});
 
 		orderNode.appendChild(newNode);
 	});

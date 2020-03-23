@@ -1,15 +1,13 @@
 <script src="/scripts/_userAuthForm.js"></script>
 <h2>Log In</h2>
-<div>
+<form>
     <label for="username">Username:</label>
-    <input type="text" id="username" autocomplete="username"/>
-    <br/>
-</div>
-<div>
+    <input type="text" id="username" autocomplete="username"/><br/>
     <label for="password">Password:</label>
-    <input type="password" id="password" autocomplete="current-password"/>
-</div>
-<div>
-    <input type="submit" value="Submit" onclick="submitLogin()"/>
-</div>
+    <input type="password" id="password" autocomplete="current-password"/><br/>
+    <button onclick="submitLogin()">
+        Submit
+        <i class="material-icons">send</i>
+    </button>
+</form>
 <a href="/register">Don't have an account?</a>

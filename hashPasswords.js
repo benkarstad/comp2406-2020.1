@@ -3,7 +3,7 @@ const
 
 	auth = require("./scripts/auth"),
 
-	config = require("./config.json"),
+	config = require("./serverconfig"),
 	saltKey = require("./saltKey"),
 
 	mongoc = mongo.MongoClient;

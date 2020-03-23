@@ -1,13 +1,17 @@
 const
-	express = require("express");
-	mongo = require("mongodb");
+	express = require("express"),
+	mongo = require("mongodb"),
+	status = require("./scripts/status");
 
-let router = express.Router();
+	router = express.Router();
 
 router.get("/", respondOrderPage);
 router.post("/submit", submitOrder);
 
 function respondOrderPage(request, response, next){
+	if(response.locals.user === undefined){
+		return status.send403(request, response, next);
+	}
 	response.format({
 		"text/html": ()=>{
 			response.render("order", {
@@ -19,8 +23,13 @@ function respondOrderPage(request, response, next){
 }
 
 function submitOrder(request, response, next){
-	let _id = new mongo.ObjectID(request.body._id),
+	let _id,
 		responseStats = request.body;
+	try{
+		_id = new mongo.ObjectID(request.body._id);
+	}catch(up){
+		return status.send404(request, response, next);
+	}
 
 	Promise.all([
 		response.app.locals.db.collections.stats.findOne({_id}),

@@ -8,7 +8,7 @@ const
 	status = require("./scripts/status"),
 	auth = require("./scripts/auth"),
 
-	config = require("./config.json"),
+	config = require("./serverconfig"),
 
 	mongoc = mongo.MongoClient;
 
@@ -17,7 +17,8 @@ function init(){
 		app = express();
 
 	//connect and configure the mongoDataBase
-	mongoc.connect(config.db.url, (up, client)=>{
+	mongoc.connect(config.db.url, {useUnifiedTopology: true},
+				   (up, client)=>{
 		if(up) throw up;
 		else{
 			let db = client.db(config.db.name);
@@ -26,6 +27,7 @@ function init(){
 				collections: {
 					users: db.collection("users"),
 					restaurants: db.collection("restaurants"),
+					orders: db.collection("orders"), //TODO: store orders in the DB
 					stats: db.collection("stats")
 				}
 			}
@@ -38,8 +40,6 @@ function init(){
 	//configure express to use nunjucks
 	njk.configure("views",{express: app});
 	app.set("view engine", "njk");
-
-	//TODO: something about being logged in
 
 	app.use((request, response, next)=>{ //log request info
 		console.log(`${request.method} request for ${request.url}`);
@@ -63,6 +63,7 @@ function init(){
 	app.use(/^\/addrestaurant/, requireRouter("addrestaurant_router")); //add restaurant information
 	app.use(/^\/register/, requireRouter("register_router")); //register a new account
 	app.use(/^\/login/, requireRouter("login_router")); //login to an existing account
+	app.use(/^\/users/, requireRouter("user_router")); //access/modify user information
 	app.use(express.static(config.publicDir)); //serve static server assets
 
 	app.use(status.send404);// send a 404 response if nothing is found

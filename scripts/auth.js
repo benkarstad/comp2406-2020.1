@@ -3,7 +3,7 @@ const
 	jwt = require("jsonwebtoken"),
 	status = require("./status"),
 
-	config = require("../config"),
+	config = require("../serverconfig"),
 
 	sessionTimeout = config.sessionTimeout, //session length in milliseconds
 	secretKey = require("../secretKey");

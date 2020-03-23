@@ -12,7 +12,7 @@ function submitLogin(){
 	xhttp.onreadystatechange = ()=>{
 		if(xhttp.readyState === 4){
 			if(xhttp.status === 200){
-				window.location.replace(`/profile`);
+				window.location.replace(`/users/profile`);
 			}
 			else if(xhttp.status === 401){
 				alert("Invalid Login Credentials")

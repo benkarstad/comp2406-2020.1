@@ -5,7 +5,7 @@ const
 	auth = require("./scripts/auth"),
 	status = require("./scripts/status"),
 
-	config = require("./config"),
+	config = require("./serverconfig"),
 
 	secretKey = require("./secretKey");
 

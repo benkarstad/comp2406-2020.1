@@ -35,7 +35,27 @@ function send400(request, response, next){
 function send401(request, response, next){
 	const
 		status = 401,
-		message = "Access Not Permitted";
+		message = "Unauthorized";
+	response.status(status);
+	response.format({
+		"text/html": ()=>{
+			response.render("error", {
+				statusCode: status,
+				message,
+				loggedIn: response.locals.user !== undefined
+			});
+		},
+		"text/plain": ()=>{
+			response.send(message).end();
+		},
+		"default": ()=>{response.end();}
+	})
+}
+
+function send403(request, response, next){
+	const
+		status = 403,
+		message = "Access Forbidden";
 	response.status(status);
 	response.format({
 		"text/html": ()=>{
@@ -88,6 +108,7 @@ function send200(request, response, next){
 
 module.exports = {
 	send200,
-	send404,
-	send401
+	send401,
+	send403,
+	send404
 };

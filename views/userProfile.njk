@@ -1,0 +1,22 @@
+{% extends "templated_components/_skeleton.njk" %}
+{% set title = user.username ~ "'s Profile" %}
+
+{% block initialize %}
+{% if userProfile.username === user.username %}
+    <script src="/scripts/userProfile.js"></script>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+<h1>{{ userProfile.username }}</h1>
+{% if userProfile.username === user.username %}
+    <label for="private">Private:</label>
+    <input type="checkbox" id="private">
+    <button onclick="savePrivacy()"><i class="material-icons">save</i></button>
+{% endif %}
+<hr>
+<h2>Order History:</h2>
+{% for order in orders %}
+    <h3><a href="/orders/{{ order._id}}">{{ order._id }}</a></h3><!--TODO: Change text value to more useful information-->
+{% endfor %}
+{% endblock %}

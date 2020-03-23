@@ -17,7 +17,12 @@ router.get("/", respondNames); //serve list of restaurant names
 router.post("/", addRestaurant); //add the provided restaurant to the server
 
 function getRestaurant(request, response, next){
-	let idParam = new mongo.ObjectID(request.params.id);
+	let idParam;
+	try{
+		idParam = new mongo.ObjectID(request.params.id);
+	}catch(up){
+		return status.send404(request, response, next);
+	}
 	response.app.locals.db.collections.restaurants.findOne({_id: idParam}, (up, result)=>{
 		if(up){
 			next(up);
@@ -54,9 +59,14 @@ function addRestaurant(request, response, next){
 }
 
 function updateRestaurant(request, response, next){
-	let id = new mongo.ObjectID(request.params.id);
+	let _id;
+	try{
+		_id = new mongo.ObjectID(request.params.id);
+	}catch(up){
+		return status.send404(request, response, next);
+	}
 	delete request.body._id;
-	response.app.locals.db.collections.restaurants.findOneAndReplace({_id: id}, request.body, (up, result)=>{
+	response.app.locals.db.collections.restaurants.findOneAndReplace({_id}, request.body, (up, result)=>{
 		if(up){
 			next(up);
 		}else response.status(200).end();
@@ -95,7 +105,6 @@ function respondNames(request, response, next){
 		if(up){
 			next(up);
 		}else{
-			console.log(result);//TEMP
 			response.format({
 				"text/html": ()=>{
 					response.render("restaurantNames", {

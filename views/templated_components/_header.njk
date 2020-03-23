@@ -1,7 +1,7 @@
 <script src="/scripts/_header.js"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/dropdown.css">
 <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
-<div class="header"> <!-- TODO: Update header -->
+<div class="header">
 
     <div class="dropdown">
         <div class="dropdown-tile">
@@ -11,7 +11,7 @@
 
     <div class="dropdown">
         <div class="dropdown-tile">
-            <i class="material-icons">fastfood</i>
+            <i class="material-icons">local_dining</i>
             <a href="/restaurants">Restaurants</a>
         </div>
         <div class="dropdown-content">
@@ -27,7 +27,7 @@
         <div class="dropdown-tile">
             <i class="material-icons">account_box</i>
             {% if loggedIn %}
-            <a href="/profile">{{ user.username }}'s Profile</a>
+            <a href="/users/profile">{{ user.username }}'s Profile</a>
             {% else %}
             <a href="/login">Log In</a>
             {% endif %}
@@ -38,6 +38,7 @@
         {% else %}
             <a href="/register">Register</a>
         {% endif %}
+            <a href="/users">All Users</a>
         </div>
     </div>
 </div>
