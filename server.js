@@ -63,7 +63,7 @@ function init(){
 	app.use(/^\/addrestaurant/, requireRouter("addrestaurant_router")); //add restaurant information
 	app.use(/^\/register/, requireRouter("register_router")); //register a new account
 	app.use(/^\/login/, requireRouter("login_router")); //login to an existing account
-	app.use(/^\/users/, requireRouter("user_router")); //access/modify user information
+	app.use(/^\/users/, requireRouter("users_router")); //access/modify user information
 	app.use(express.static(config.publicDir)); //serve static server assets
 
 	app.use(status.send404);// send a 404 response if nothing is found

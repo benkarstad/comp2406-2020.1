@@ -1,7 +1,7 @@
 const
 	express = require("express"),
 	mongo = require("mongodb"),
-	status = require("./scripts/status");
+	status = require("../scripts/status");
 
 	router = express.Router();
 

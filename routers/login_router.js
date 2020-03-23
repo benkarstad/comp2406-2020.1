@@ -2,12 +2,12 @@ const
 	express = require("express"),
 	jwt = require("jsonwebtoken"),
 
-	auth = require("./scripts/auth"),
-	status = require("./scripts/status"),
+	auth = require("../scripts/auth"),
+	status = require("../scripts/status"),
 
-	config = require("./serverconfig"),
+	config = require("../serverconfig"),
 
-	secretKey = require("./secretKey");
+	secretKey = require("../secretKey");
 
 let router = express.Router();
 

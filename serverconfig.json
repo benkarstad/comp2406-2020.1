@@ -1,6 +1,6 @@
 {
   "port": 3000,
-  "routerDir": ".",
+  "routerDir": "./routers",
   "publicDir": "public",
   "db": {
     "url": "mongodb://localhost:27017/",
