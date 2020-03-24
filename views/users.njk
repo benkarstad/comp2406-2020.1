@@ -1,8 +1,17 @@
 {% extends "templated_components/_skeleton.njk" %}
 {% set title = user.username ~ "'s Profile" %}
 
+{% block initialize %}
+<script src="/scripts/users.js"></script>
+{% endblock %}
 {% block body %}
 <h1>Users:</h1>
+<label for="searchBar">Search Users:</label>
+<input id="searchBar" type="text">
+<button onclick="searchUsers()">
+    Send
+    <i class="material-icons">send</i>
+</button>
 {% for user in users %}
     <h3><a href="/users/{{ user._id}}">{{ user.username }}</a></h3>
 {% endfor %}

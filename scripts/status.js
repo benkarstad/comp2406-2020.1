@@ -15,7 +15,8 @@ function send400(request, response, next){
 			response.render("error", {
 				statusCode: status,
 				message,
-				loggedIn: response.locals.user !== undefined
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
 			});
 		},
 		"text/plain": ()=>{
@@ -25,6 +26,32 @@ function send400(request, response, next){
 	})
 }
 
+/**
+ * @function
+ * @param request
+ * @param response
+ * @param next
+ * */
+function send400(request, response, next){
+	const
+		status = 400,
+		message = "Bad Request";
+	response.status(status);
+	response.format({
+		"text/html": ()=>{
+			response.render("error", {
+				statusCode: status,
+				message,
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
+			});
+		},
+		"text/plain": ()=>{
+			response.send(message).end();
+		},
+		"default": ()=>{response.end();}
+	})
+}
 
 /**
  * @function
@@ -42,7 +69,8 @@ function send401(request, response, next){
 			response.render("error", {
 				statusCode: status,
 				message,
-				loggedIn: response.locals.user !== undefined
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
 			});
 		},
 		"text/plain": ()=>{
@@ -62,7 +90,8 @@ function send403(request, response, next){
 			response.render("error", {
 				statusCode: status,
 				message,
-				loggedIn: response.locals.user !== undefined
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
 			});
 		},
 		"text/plain": ()=>{
@@ -85,7 +114,8 @@ function send404(request, response, next){
 			response.render("error", {
 				statusCode: 404,
 				message: `Page ${request.url} not found.`,
-				loggedIn: response.locals.user !== undefined
+				loggedIn: response.locals.user !== undefined,
+				user: response.locals.user
 			});
 		},
 		"text/plain": ()=>{

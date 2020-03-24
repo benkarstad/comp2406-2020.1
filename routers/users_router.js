@@ -75,16 +75,26 @@ function redirectToUser(request, response, next){
 function respondUsers(request, response, next){
 	response.app.locals.db.collections.users.find({privacy: false}).toArray()
 		.then((users)=>{
-			console.log(users);//TEMP
+
+			//filter user list by query:name
+			let nameQuery = request.query.name === undefined ? "" : request.query.name;
+			if(typeof nameQuery !== "string") status.send400(request, response, next);
+			let queryExp = new RegExp(nameQuery, "i"),
+				queriedUsers = users.filter((user)=>queryExp.test(user.username));
+
+			//send filtered users to the client
 			response.format({
 				"text/html": ()=>{
 					return response.render(
 						"users",
 					   {
-					   		users,
+					   		users: queriedUsers,
 						   loggedIn: response.locals.user !== undefined,
 						   user: response.locals.user
 					   });
+				},
+				"application/json": ()=>{
+					response.status(200).json(queriedUsers);
 				}
 			})
 		});
