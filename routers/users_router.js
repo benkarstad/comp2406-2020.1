@@ -29,7 +29,7 @@ function getUser(request, response, next){
 	let _id;
 	try{
 		_id = new mongo.ObjectID(request.params._id);
-	}catch(up){
+	}catch(err){
 		return status.send404(request, response, next);
 	}
 	response.app.locals.db.collections.users.findOne({_id})

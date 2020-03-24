@@ -7,8 +7,8 @@ router.get("/", respond);
 
 function respond(request, response, next){
 	response.app.locals.db.collections.stats
-		.find().toArray((up, result)=>{
-			if(up) next(up);
+		.find().toArray((err, result)=>{
+			if(err) next(err);
 			response.format({
 				"text/html": ()=>{
 					response.render("stats", {

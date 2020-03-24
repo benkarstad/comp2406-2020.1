@@ -12,7 +12,7 @@ let db,
 	usersCollection;
 
 //connect and configure the mongoDataBase
-mongoc.connect(config.db.url, (up, client)=>{
+mongoc.connect(config.db.url, (err, client)=>{
 	db = client.db(config.db.name);
 	usersCollection = db.collection("users");
 

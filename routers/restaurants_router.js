@@ -20,12 +20,12 @@ function getRestaurant(request, response, next){
 	let idParam;
 	try{
 		idParam = new mongo.ObjectID(request.params.id);
-	}catch(up){
+	}catch(err){
 		return status.send404(request, response, next);
 	}
-	response.app.locals.db.collections.restaurants.findOne({_id: idParam}, (up, result)=>{
-		if(up){
-			next(up);
+	response.app.locals.db.collections.restaurants.findOne({_id: idParam}, (err, result)=>{
+		if(err){
+			next(err);
 		}else{
 			if(result === null) status.send404(request, response, next);
 			response.locals.restaurantData = result;
@@ -49,9 +49,9 @@ function addRestaurant(request, response, next){
 		delivery_fee: request.body.delivery_fee,
 		menu: []
 	};
-	response.app.locals.db.collections.restaurants.insertOne(newRestaurant, (up, result)=>{
-		if(up){
-			next(up);
+	response.app.locals.db.collections.restaurants.insertOne(newRestaurant, (err, result)=>{
+		if(err){
+			next(err);
 		}else{
 			response.status(200).json(result.ops[0]);
 		}
@@ -62,13 +62,13 @@ function updateRestaurant(request, response, next){
 	let _id;
 	try{
 		_id = new mongo.ObjectID(request.params.id);
-	}catch(up){
+	}catch(err){
 		return status.send404(request, response, next);
 	}
 	delete request.body._id;
-	response.app.locals.db.collections.restaurants.findOneAndReplace({_id}, request.body, (up, result)=>{
-		if(up){
-			next(up);
+	response.app.locals.db.collections.restaurants.findOneAndReplace({_id}, request.body, (err, result)=>{
+		if(err){
+			next(err);
 		}else response.status(200).end();
 	});
 }
@@ -101,9 +101,9 @@ function respondRestaurant(requent, response, next){
 
 function respondNames(request, response, next){
 	response.app.locals.db.collections.restaurants
-		.find({}, {projection: {_id: 1, name: 1}}).toArray((up, result)=>{
-		if(up){
-			next(up);
+		.find({}, {projection: {_id: 1, name: 1}}).toArray((err, result)=>{
+		if(err){
+			next(err);
 		}else{
 			response.format({
 				"text/html": ()=>{

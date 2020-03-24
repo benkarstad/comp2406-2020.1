@@ -85,11 +85,11 @@ function verifyToken(request, response, next){
 	}
 
 	let payload;
-	try {
+	try{
 		//parse the session token
 		payload = jwt.verify(token, secretKey);
-	} catch (up) {
-		if (up instanceof jwt.JsonWebTokenError) {
+	}catch (err){
+		if (err instanceof jwt.JsonWebTokenError) {
 			return next();
 		}
 		// otherwise, return a bad request error

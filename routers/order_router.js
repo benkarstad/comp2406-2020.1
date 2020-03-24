@@ -27,7 +27,7 @@ function submitOrder(request, response, next){
 		responseStats = request.body;
 	try{
 		_id = new mongo.ObjectID(request.body._id);
-	}catch(up){
+	}catch(err){
 		return status.send404(request, response, next);
 	}
 
@@ -52,8 +52,8 @@ function submitOrder(request, response, next){
 				favItem: "None Yet",
 				items: {}
 			};
-			response.app.locals.db.collections.stats.insertOne(statDoc, (up, result)=>{
-				if(up) next(up);
+			response.app.locals.db.collections.stats.insertOne(statDoc, (err, result)=>{
+				if(err) next(err);
 			});
 		}else{
 			result[0].orderCount++;
@@ -71,8 +71,8 @@ function submitOrder(request, response, next){
 					return (result[0].items[cur]>result[0].items[acc] || result[0].items[acc] === undefined) ? cur : acc;
 				}, "None Yet");
 
-			response.app.locals.db.collections.stats.findOneAndReplace({_id}, result[0], (up, result)=>{
-				if(up) next(up);
+			response.app.locals.db.collections.stats.findOneAndReplace({_id}, result[0], (err, result)=>{
+				if(err) next(err);
 			})
 		}
 		response.status(200).json({orderID: result[0].orderCount});

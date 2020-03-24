@@ -18,8 +18,8 @@ function init(){
 
 	//connect and configure the mongoDataBase
 	mongoc.connect(config.db.url, {useUnifiedTopology: true},
-				   (up, client)=>{
-		if(up) throw up;
+				   (err, client)=>{
+		if(err) throw err;
 		else{
 			let db = client.db(config.db.name);
 			app.locals.db = {
