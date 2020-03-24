@@ -15,7 +15,8 @@ let currentOrder = {
 	}
 };
 
-/*
+/**
+ * @function
  * requests restaurant name data and populates the dropdown menu to match.
  * sets event listener for #submitButton
  * */
@@ -39,11 +40,10 @@ function init(){
 	document.getElementById("submitButton").addEventListener("click", ()=>sendOrder(null));
 }
 
-/*
- * Populates the dropdown menu with the names of provided restaurants.
+/**
+ * @function - Populates the dropdown menu with the names of provided restaurants.
  *
- * Params:
- *   Object[] restaurants: all the restaurants to be displayed.
+ * @param {Object[]} restaurants - restaurants: all the restaurants to be displayed.
  * */
 function updateDropdown(restaurants){
 	let dropdown = document.getElementById(
@@ -61,12 +61,12 @@ function updateDropdown(restaurants){
 	}
 }
 
-/*
+/**
+ * @function
  * Displays all the categories of the chosen restaurant to the first column.
  * If order data would be lost in changing restaurants, prompts the user for confirmation
  *
- * Params:
- *   String restaurantId: The id of the selected restaurant.
+ * @param {String} restaurantId: The id of the selected restaurant.
  * */
 function selectRestaurant(restaurantId){
 	if(currentOrder.items.length !== 0 && //prompts user if data would be lost
@@ -94,12 +94,12 @@ function selectRestaurant(restaurantId){
 	xhttp.send();
 }
 
-/*
+/**
+ * @function
  * adds all the dishes of the selected category, their descriptions and their prices to the center column
  *
- * Params:
- * 	 String categoryName: the name of the selected category.
- *   Object restaurant: the restaurant object selected.
+ * @param {String} categoryName: the name of the selected category.
+ * @param {Object} restaurant: the restaurant object selected.
  * */
 function selectCategory(restaurant, categoryName){
 	let items = restaurant.menu.filter((item)=>{return item.category === categoryName;});
@@ -122,13 +122,14 @@ function selectCategory(restaurant, categoryName){
 	}
 }
 
-/*
+/**
+ * @function
  * increments the count of the selected dish by one, adding it to the list if it isn't there,
  * calls the update() function
  *
- * Params:
- *   Object toAdd: the object of the menu item being added to the order.
- *   Integer amount: the number of that item being added (or removed).
+ * @param {Object} toAdd: the object of the menu item being added to the order.
+ * @param {number} amount: the number of that item being added (or removed).
+ * @param {Object} restaurant: the restaurant being added to.
  * */
 function addToCart(toAdd, amount, restaurant){
 	if(amount === 0) return;
@@ -150,17 +151,17 @@ function addToCart(toAdd, amount, restaurant){
 	update(restaurant);
 }
 
-/*
- * executes order 66
+/**
+ * @function executes order 66
  *
- * Params:
- *   Node node: the HTML node to be cleared.
+ * @param {Node} node: the HTML node to be cleared.
  * */
 function clearNode(node){
 	while(node.firstChild) node.removeChild(node.firstChild);
 }
 
-/*
+/**
+ * @function
  * manually resets all html and js state to when the page was loaded
  * */
 function resetPage(){
@@ -184,11 +185,11 @@ function resetPage(){
 	currentOrder.subtotal = 0;
 }
 
-/*
+/**
+ * @function
  * loads the restaurant content onto the main page
  *
- * Params:
- *   Object restaurant: the restaurant object to be rendered.
+ * @param {Object} restaurant: the restaurant object to be rendered.
  * */
 function renderContent(restaurant){
 	let categoriesNode = document.getElementById("categories");
@@ -218,11 +219,11 @@ function renderContent(restaurant){
 	update(restaurant);
 }
 
-/*
+/**
+ * @function
  * updates the UI to display information about a new restaurant
  *
- * Params:
- *	Object restaurant: the restaurant object to be rendered.
+ * @param {Object} restaurant: the restaurant object to be rendered.
  * */
 function update(restaurant){
 	//update #orderSummary
@@ -264,11 +265,11 @@ function update(restaurant){
 	});
 }
 
-/*
+/**
+ * @function
  * updates listed restaurants, filtered based on #searchBox query (not cASE-sEnSitIVe)
  *
- * Params:
- *  Object[] restaurants: the names of all the restaurants to filter.
+ * @param {Object[]} restaurants: the names of all the restaurants to filter.
  * */
 function filterDropdown(restaurants){
 	let queryString = document.getElementById("searchBox").value;
@@ -282,11 +283,10 @@ function filterDropdown(restaurants){
 	updateDropdown(matchedRestaurants);
 }
 
-/*
+/**
  * logic for clicking the submit button
  *
- * Params:
- *	Object restaurant: the restaurant being ordered from.
+ * @param {Object} restaurant: the restaurant being ordered from.
  * */
 function sendOrder(restaurant){
 	if(restaurant === null){
@@ -315,7 +315,7 @@ function sendOrder(restaurant){
 		xhttp.open("POST", `/order/submit`, true);
 		xhttp.setRequestHeader("Content-Type", "application/json");
 		xhttp.send(JSON.stringify({
-			_id: restaurant._id,
+			restaurantId: restaurant._id,
 		  	items: items
 		}));
 	}else{
