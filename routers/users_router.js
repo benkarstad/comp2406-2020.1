@@ -49,7 +49,7 @@ function getOrderHistory(request, response, next){
 
 function respondProfile(request, response, next){
 	if(response.locals.userProfile.privacy === false ||
-		response.locals.userProfile._id === response.locals.user._id){ //only show private accounts to that user
+		(response.locals.user !== undefined && response.locals.userProfile.username === response.locals.user.username)){ //only show private accounts to that user
 			return response.format({
 				"text/html": ()=>{
 					response.render(

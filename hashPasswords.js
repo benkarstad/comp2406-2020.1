@@ -4,7 +4,7 @@ const
 	auth = require("./scripts/auth"),
 
 	config = require("./serverconfig"),
-	saltKey = require("./saltKey"),
+	secretKey = require("./secretKey"),
 
 	mongoc = mongo.MongoClient;
 
@@ -22,7 +22,7 @@ mongoc.connect(config.db.url, (up, client)=>{
 			let user = users[index];
 			user.salt = auth.genRandomString(64);
 
-			let hashKey = auth.saltHash(saltKey, user.salt);
+			let hashKey = auth.saltHash(secretKey, user.salt);
 
 			user.passwordHash = auth.saltHash(user.password, hashKey);
 

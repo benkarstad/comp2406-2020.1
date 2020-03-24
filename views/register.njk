@@ -1,0 +1,24 @@
+{% extends "templated_components/_skeleton.njk" %}
+{% set title = "Register" %}
+{% if loggedIn %}
+    <h1>You must be logged out to register a new account</h1>
+{% else %}
+    {% block initialize %}
+        <script src="/scripts/register.js"></script>
+    {% endblock %}
+
+    {% block body %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" autocomplete="username"/><br/>
+        <label for="privacy">Privacy:</label>
+        <input type="checkbox" id="privacy"><br/>
+        <label for="password">Password:</label>
+        <input type="password" id="password"/><br/>
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword"/><br/>
+        <button onclick="submitRegistration()">
+            Submit
+            <i class="material-icons">send</i>
+        </button>
+{% endblock %}
+{% endif %}

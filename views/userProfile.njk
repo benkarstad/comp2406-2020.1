@@ -11,7 +11,11 @@
 <h1>{{ userProfile.username }}</h1>
 {% if userProfile.username === user.username %}
     <label for="private">Private:</label>
-    <input type="checkbox" id="private">
+    {% if userProfile.privacy %}
+        <input type="checkbox" id="private" checked/>
+    {% else %}
+        <input type="checkbox" id="private"/>
+    {% endif %}
     <button onclick="savePrivacy()"><i class="material-icons">save</i></button>
 {% endif %}
 <hr>
