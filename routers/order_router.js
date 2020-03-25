@@ -13,9 +13,11 @@ router.use((request, response, next)=>{
 	return next();
 });
 
+//serve the order form
 router.get("/", respondOrderPage);
-router.post(
-	"/submit",
+
+//receive and store a completed order
+router.post("/submit",
 	submitOrder,
 	(request, response, next)=>{
 		response.status(200).json({orderID: response.locals.order._id})

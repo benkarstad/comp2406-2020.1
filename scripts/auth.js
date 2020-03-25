@@ -10,7 +10,7 @@ const
 
 
 /**
- * generates random string of characters
+ * generates random string of hex characters
  * @function
  * @param {number} length - Length of the random string.
  */
@@ -41,7 +41,7 @@ function saltHash(value, salt){
  * @param {string} salt
  * @param {string} hash
  * */
-function validate(value, salt, hash){
+function verifyHash(value, salt, hash){
 	return hash === saltHash(value, salt);
 }
 
@@ -111,7 +111,7 @@ function verifyToken(request, response, next){
 module.exports = {
 	genRandomString,
 	saltHash,
-	validate,
+	verifyHash,
 	setToken,
 	verifyToken
 };

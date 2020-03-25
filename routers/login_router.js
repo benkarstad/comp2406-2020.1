@@ -54,7 +54,7 @@ function authenticate(request, response, next){
 		{salt, passwordHash} = response.locals.user,
 		hashKey = auth.saltHash(secretKey, salt);
 
-	if(auth.validate(password, hashKey, passwordHash)){ //password is correct
+	if(auth.verifyHash(password, hashKey, passwordHash)){ //password is correct
 		return next(); //proceed to token creation
 	}else{ //password is incorrect
 		return status.send401(request, response, next);
