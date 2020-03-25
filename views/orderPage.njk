@@ -1,7 +1,26 @@
 {% extends "templated_components/_skeleton.njk" %}
 {% set title = "Order " ~ order._id %}
-<!--TODO: Add more info-->
 {% block body %}
-<h1>{{order._id }}</h1>
+<h1>ID: {{order._id }}</h1>
+<p>
+    On <b>{{ order.date }}</b>,
+    user
+    <b><a href="/users/{{ orderUser._id }}">{{ orderUser.username }}</a></b>
+    made an order to
+    <b><a href="/restaurants/{{ orderRestaurant._id }}">{{ orderRestaurant.name }}</a></b>
+    and ordered the following items:
+</p>
+
+<ul>
+    {%  for name, amount in order.items %}
+        <li>{{ amount }}x{{ name }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Order Summary:</h3>
+<p id="subtotal">Subtotal:<span class="priceTag">${{ orderSummary.subtotal }}</span></p>
+<p id="taxes">Tax:<span class="priceTag">${{ orderSummary.tax }}</span></p>
+<p id="deliveryFee">Delivery Fee:<span class="priceTag">${{ orderSummary.delivery_fee }}</span></p>
+<p id="total">Total:<span class="priceTag">${{ orderSummary.total }}</span></p>
 
 {% endblock %}

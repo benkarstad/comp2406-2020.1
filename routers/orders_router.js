@@ -2,6 +2,7 @@ const
 	express = require("express"),
 	mongo = require("mongodb"),
 	status = require("../scripts/status"),
+	utils = require("../scripts/utils"),
 
 	router = express.Router();
 
@@ -31,11 +32,24 @@ function respondOrder(request, response, next){
 					(response.locals.user === undefined || !response.locals.user._id.equals(orderUser._id)))
 					return status.send404(request, response, next);
 
+				let subtotal = utils.calcSubtotal(order.items, orderRestaurant),
+					tax = 0.1*subtotal,
+					delivery_fee = orderRestaurant.delivery_fee,
+					total = subtotal+tax+delivery_fee;
+
+				let orderSummary = {
+						subtotal: subtotal.toFixed(2),
+						tax: tax.toFixed(2),
+						delivery_fee: delivery_fee.toFixed(2),
+						total: total.toFixed(2)
+				};
+
 				response.format({
 					"text/html": ()=>{
 						response.render("orderPage",
 							{
 								order,
+								orderSummary,
 								orderUser,
 								orderRestaurant,
 								loggedIn: response.locals.user !== undefined,
