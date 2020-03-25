@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block body %}
-<h1>{{ userProfile.username }}</h1>
+<h1>{{ userProfile.username }}<i><sup>'s Profile</sup></i></h1>
 {% if userProfile.username === user.username %}
     <label for="private">Private:</label>
     {% if userProfile.privacy %}
@@ -23,8 +23,9 @@
 <h2>Order History:</h2>
 {% for order in orders %}
     <div class="order">
-        <h3><a href="/orders/{{ order}}">{{ order.date }}</a></h3>
+        <h3><a href="/orders/{{ order._id }}">{{ order.date }}</a></h3>
         <div class="orderData">
+            <h4><a href="/restaurants/{{ order.restaurantId }}">Restaurant: {{ order.restaurantId }}</a></h4>
             {% for item, amount in order.items %}
                 <p class="orderItem">{{ item }}: {{ amount }}</p>
             {% endfor %}
