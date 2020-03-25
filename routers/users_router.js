@@ -40,7 +40,7 @@ function getUser(request, response, next){
 }
 
 function getOrderHistory(request, response, next){
-	response.app.locals.db.collections.orders.find({username: response.locals.userProfile.username})
+	response.app.locals.db.collections.orders.find({userId: response.locals.userProfile._id})
 		.toArray().then((orders)=>{
 			response.locals.userProfile.orders = orders;
 			return next();

@@ -4,6 +4,7 @@
 {% block initialize %}
 {% if userProfile.username === user.username %}
     <script src="/scripts/userProfile.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/userProfile.css"/>
 {% endif %}
 {% endblock %}
 
@@ -21,6 +22,13 @@
 <hr>
 <h2>Order History:</h2>
 {% for order in orders %}
-    <h3><a href="/orders/{{ order._id}}">{{ order._id }}</a></h3><!--TODO: Change text value to more useful information-->
+    <div class="order">
+        <h3><a href="/orders/{{ order}}">{{ order.date }}</a></h3>
+        <div class="orderData">
+            {% for item, amount in order.items %}
+                <p class="orderItem">{{ item }}: {{ amount }}</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endfor %}
 {% endblock %}
