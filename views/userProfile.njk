@@ -1,5 +1,5 @@
 {% extends "templated_components/_skeleton.njk" %}
-{% set title = user.username ~ "'s Profile" %}
+{% set title = userProfile.username ~ "'s Profile" %}
 
 {% block initialize %}
 {% if userProfile.username === user.username %}

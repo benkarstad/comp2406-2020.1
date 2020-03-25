@@ -18,7 +18,6 @@ router.post(
 	"/submit",
 	submitOrder,
 	(request, response, next)=>{
-		console.log(response.locals.order);
 		response.status(200).json({orderID: response.locals.order._id})
 	});
 
@@ -49,4 +48,5 @@ function submitOrder(request, response, next){
 	});
 
 }
+
 module.exports = router;

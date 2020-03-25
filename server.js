@@ -57,6 +57,7 @@ function init(){
 	//route to various paths
 	app.use(/^\/$/, requireRouter("index_router")); //serve homepage
 	app.use(/^\/order/, requireRouter("order_router")); //serve order form and accept orders
+	app.use(/^\/orders/, requireRouter("orders_router")); //serve data regarding order history
 	app.use(/^\/stats/, requireRouter("stats_router")); //serve stats page
 	app.use(/^\/restaurants/, requireRouter("restaurants_router")); //serve restaurant information
 	app.use(/^\/addrestaurant/, requireRouter("addrestaurant_router")); //add restaurant information
