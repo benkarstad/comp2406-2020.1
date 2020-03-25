@@ -69,6 +69,7 @@ function respondProfile(request, response, next){
 }
 
 function redirectToUser(request, response, next){
+	if(response.locals.user === undefined) response.redirect("/login");
 	response.redirect(`/users/${response.locals.user._id}`);
 }
 

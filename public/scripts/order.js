@@ -301,13 +301,19 @@ function sendOrder(restaurant){
 		let xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = ()=>{
 			if(xhttp.readyState === 4){
-				if(xhttp.status === 200){
+				let status = xhttp.status;
+				if(status === 200){
 					let responseObj = JSON.parse(xhttp.responseText);
 					alert(`Order Submitted\nOrder ID: ${responseObj.orderID}`);
 					resetPage();
-				}else if(xhttp.status === 500){
+				}
+				else if(status === 403){
+					alert(xhttp.responseText);
+				}
+				else if(status === 500){
 					alert("Internal Server Error\nPlease Try Again");
-				}else{
+				}
+				else{
 					alert("Something went Wrong\nPlease Try Again Later");
 				}
 			}

@@ -27,8 +27,7 @@ function init(){
 				collections: {
 					users: db.collection("users"),
 					restaurants: db.collection("restaurants"),
-					orders: db.collection("orders"), //TODO: store orders in the DB
-					stats: db.collection("stats")
+					orders: db.collection("orders"),
 				}
 			}
 		}
