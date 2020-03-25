@@ -1,8 +1,6 @@
 {% extends "templated_components/_skeleton.njk" %}
 {% set title = restaurant.name %}
-{% block initialize %}
-    <link rel="stylesheet" type="text/css" href="/stylesheets/restaurant.css">
-{% endblock %}
+
 {% block body %}
     <h1 id="name">
         {{ restaurant.name }}
