@@ -11,7 +11,7 @@ let router = express.Router();
 router.get("/", respondPage);
 router.post("/",
 			registerUser,
-			auth.setToken,
+			auth.session.setToken,
 			status.send200);
 function respondPage(request, response, next){
 	response.format({

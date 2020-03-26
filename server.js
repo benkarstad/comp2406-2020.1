@@ -28,6 +28,7 @@ function init(){
 					users: db.collection("users"),
 					restaurants: db.collection("restaurants"),
 					orders: db.collection("orders"),
+					sessions: db.collection("sessions")
 				}
 			}
 		}
@@ -46,15 +47,16 @@ function init(){
 	}); //log request information to console
 
 	//parse request data (if any)
-	app.use(bodyParser.json()); //json body
-	app.use(bodyParser.urlencoded({extended: true})); //urlencoded body
-	app.use(cookieParser()); //cookies
+	app.use(bodyParser.json(), //json body
+			bodyParser.urlencoded({extended: true}), //urlencoded body
+			cookieParser()); //cookies
 
-	app.use(auth.verifyToken); //validate session token
-	app.use(auth.setToken); //provide an updated session token
+	app.use(/^\/logout/, requireRouter("logout_router")); //log out uf the current session
 
+	app.use(auth.session.verifyToken, //validate session token and get user info
+			auth.session.setToken); //provide an updated session token
 
-	//route to various paths
+	//route to other various paths
 	app.use(/^\/$/, requireRouter("index_router")); //serve homepage
 	app.use(/^\/order/, requireRouter("order_router")); //serve order form and accept orders
 	app.use(/^\/orders/, requireRouter("orders_router")); //serve data regarding order history

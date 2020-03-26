@@ -1,6 +1,5 @@
 const
 	express = require("express"),
-	jwt = require("jsonwebtoken"),
 
 	auth = require("../scripts/auth"),
 	status = require("../scripts/status"),
@@ -15,7 +14,7 @@ router.get("/", respondPage);
 router.post("/",
 			getUser,
 			authenticate,
-			auth.setToken,
+			auth.session.setToken,
 			status.send200
 		);
 
