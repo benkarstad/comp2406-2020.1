@@ -1,5 +1,6 @@
 const
 	express = require("express"),
+	crypto = require("crypto"),
 
 	auth = require("../scripts/auth"),
 	status = require("../scripts/status"),
@@ -30,7 +31,7 @@ function registerUser(request, response, next){
 		 (err, user)=>{
 			if(user === null){
 				let {username, privacy, password } = request.body;
-				let salt = auth.genRandomString(64),
+				let salt = crypto.randomBytes(32).toString("hex"),
 					hashKey = auth.saltHash(secretKey, salt),
 					passwordHash = auth.saltHash(password, hashKey),
 

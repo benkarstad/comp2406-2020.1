@@ -1,5 +1,12 @@
+/*
+ * running this file will set the passwords of all users to their usernames,
+ * useful when changing password storage protocols, so that all users' credentials are updated to the new system
+ * NOTE: The security issues with this approach should be self-evident
+ * */
+
 const
 	mongo = require('mongodb'),
+	crypto = require("crypto"),
 
 	auth = require("./scripts/auth"),
 
@@ -20,13 +27,11 @@ mongoc.connect(config.db.url, (err, client)=>{
 		console.log(users);
 		for(let index in users){
 			let user = users[index];
-			user.salt = auth.genRandomString(64);
+			user.salt = crypto.randomBytes(64).toString("hex");
 
 			let hashKey = auth.saltHash(secretKey, user.salt);
 
-			user.passwordHash = auth.saltHash(user.password, hashKey);
-
-			delete user.password;
+			user.passwordHash = auth.saltHash(user.username, hashKey);
 
 			usersCollection.findOneAndReplace({_id: user._id}, user)
 		}

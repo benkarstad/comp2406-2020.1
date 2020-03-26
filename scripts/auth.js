@@ -6,29 +6,19 @@ const
 	config = require("../serverconfig"),
 
 	sessionTimeout = config.sessionTimeout, //session length in milliseconds
-	secretKey = require("../secretKey");
+	secretKey = require("../secretKey"),
 
-
-/**
- * generates random string of hex characters
- * @function
- * @param {number} length - Length of the random string.
- */
-function genRandomString(length){
-	return crypto.randomBytes(Math.ceil(length/2))
-		.toString('hex') //convert to hexadecimal format
-		.slice(0,length); // return required number of characters
-}
+	hashAlgorithm = "sha512";
 
 /**
- * hash password with sha512.
+ * hash password
  * @function
  * @return {string} digest
  * @param {string} value - plaintext password value.
  * @param {string} salt - associated salt value.
  */
 function saltHash(value, salt){
-	let hash = crypto.createHmac('sha512', salt); /** Hashing algorithm sha512 */
+	let hash = crypto.createHmac(hashAlgorithm, salt);
 	hash.update(value);
 	return hash.digest('hex');
 }
@@ -96,7 +86,7 @@ function unsetToken(request, response, next){
 	if(token){
 		response.cookie("token", null, {maxAge: 0}); //remove token from cookies
 
-		response.app.locals.db.collections.sessions.findOneAndDelete({token}) //remove token from the DB
+		response.app.locals.db.collections.sessions.findOneAndDelete({token}); //remove token from the DB
 
 		delete response.locals.user;
 	}
@@ -151,7 +141,6 @@ function verifyToken(request, response, next){
 }
 
 module.exports = {
-	genRandomString,
 	saltHash,
 	verifyHash,
 	session: {
