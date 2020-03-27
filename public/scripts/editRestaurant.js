@@ -12,7 +12,6 @@ function init(id){
 	restaurantXhttp.onreadystatechange = ()=>{
 		if(restaurantXhttp.readyState !== 4 || restaurantXhttp.status !== 200) return;
 		restaurant = JSON.parse(restaurantXhttp.responseText);
-		console.log(restaurant);//TEMP
 		document.getElementById("name").value = restaurant.name;
 		document.getElementById("delivery_fee").value = parseFloat(restaurant.delivery_fee);
 		document.getElementById("min_order").value = parseFloat(restaurant.min_order);

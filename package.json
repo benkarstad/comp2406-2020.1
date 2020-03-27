@@ -4,7 +4,7 @@
     "start": "node server.js"
   },
   "name": "assignment",
-  "description": "COMP 2406A assignment 1 Submission:\r     Included Files:\r         README.txt\r         package-lock.json\r         server.js\r         contentTypes.json\r         index.njk\r         order.njk\r         client.js\r         styles.css\r         add.png\r         remove.png",
+  "description": "",
   "version": "2.0.0",
   "main": "server.js",
   "repository": {

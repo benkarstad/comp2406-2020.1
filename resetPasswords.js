@@ -22,7 +22,7 @@ mongoc.connect(config.db.url, {useUnifiedTopology: true},(err, client)=>{
 		usersCollection = db.collection("users");
 
 	usersCollection.find({}).toArray().then((users)=>{ //get all user profiles
-
+		let promise = [];
 		for(let index in users){ //reset their credentials
 			let user = users[index];
 			user.salt = crypto.randomBytes(32).toString("hex");
@@ -31,9 +31,10 @@ mongoc.connect(config.db.url, {useUnifiedTopology: true},(err, client)=>{
 
 			user.passwordHash = auth.saltHash(user.username, hashKey);
 
-			usersCollection.findOneAndReplace({_id: user._id}, user)
+			promise.push(usersCollection.findOneAndReplace({_id: user._id}, user));
 		}
-		console.log("Done!")
+
+		Promise.all(promise).then(result=>process.exit(0));
 	});
 });
 

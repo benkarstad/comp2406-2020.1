@@ -43,8 +43,9 @@ function submitOrder(request, response, next){
 	order.date = new Date();
 
 	//add order to database
-	response.app.locals.db.collections.orders.insertOne(order, {},
-	(err, order)=>{
+	response.app.locals.db.collections.orders.insertOne(order, {})
+		.then(order=>{
+			console.log(order);
 		response.locals.order = order.ops[0];
 		next();
 	});

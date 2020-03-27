@@ -1,2 +1,2 @@
-start db.bat
-start server.bat
+node database-initializer.js
+node resetPasswords.js

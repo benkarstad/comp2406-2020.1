@@ -1,69 +1,102 @@
-COMP 2406A assignment 3 Submission: TODO: Update README and redo file tree before submitting A4
+COMP 2406A assignment 3 Submission:
     Included Files:
     .
-    │   addrestaurant_router.js
-    │   config.json
-    │   contentTypes.json
-    │   index_router.js
-    │   order_router.js
+    │   database-initializer.js
+    │   init.bat
     │   package-lock.json
     │   package.json
     │   README.txt
-    │   restaurants_router.js
+    │   resetPasswords.js
+    │   restaurants.json
+    │   secretKey
+    │   server.bat
     │   server.js
-    │   stats_router.js
+    │   serverconfig.json
+    │   users.json
+    │
     │
     ├───public
-    │   ├───images
-    │   │       add.png
-    │   │       remove.png
-    │   │
     │   ├───scripts
     │   │       addrestaurant.js
     │   │       editRestaurant.js
     │   │       order.js
+    │   │       register.js
+    │   │       userProfile.js
+    │   │       users.js
+    │   │       _userAuthForm.js
     │   │
     │   └───stylesheets
-    │           editRestaurant.css
+    │           dropdown.css
+    │           header.css
     │           order.css
-    │           restaurant.css
-    │           styles.css
+    │           userProfile.css
     │
-    ├───restaurants
-    │       aragorn.json
-    │       frodo.json
-    │       legolas.json
+    ├───routers
+    │       addrestaurant_router.js
+    │       index_router.js
+    │       login_router.js
+    │       logout_router.js
+    │       orders_router.js
+    │       order_router.js
+    │       register_router.js
+    │       restaurants_router.js
+    │       stats_router.js
+    │       users_router.js
+    │
+    ├───scripts
+    │       auth.js
+    │       status.js
+    │       utils.js
     │
     └───views
         │   addrestaurant.njk
         │   editRestaurant.njk
         │   error.njk
         │   index.njk
+        │   login.njk
         │   order.njk
+        │   orderPage.njk
+        │   register.njk
         │   restaurant.njk
         │   restaurantNames.njk
         │   stats.njk
+        │   userProfile.njk
+        │   users.njk
         │
         └───templated_components
                 _footer.njk
                 _header.njk
                 _skeleton.njk
+                _userAuthForm.njk
 
     Execution Instructions:
+        Ensure the .db property in serverconfig.json is correct
+        Ensure that the database has the following collections:
+            users
+            restaurants
+            orders
+            sessions
+
         commands:
-            npm install
-            ./init.bat
-        two command prompts will open, for the database and server respectively
+            ./init.bat      #first time set-up
+            ./server.bat    #starts a server instance
+
+        a new command prompt will open for the server instance
         navigate to "localhost:3000/" in the Google Chrome browser
+
+        NOTE: If init.bat is not functioning, try importing the data manually from
+                users.json and restaurants.json, then running "node resetPasswords.js"
+
 
     Notes/Additional Features:
         User passwords are stored salted and hashed, and salts are encrypted with a master secretKey
-
         Sessions are established and validated with JSON Web Tokens (https://www.npmjs.com/package/jsonwebtoken)
         Project makes use of Google's Material Icons Library (https://www.google.com/design/icons/)
         *.njk files are Nunjucks templates (https://mozilla.github.io/nunjucks/)
 
+        WARNING: Project may behave unpredictably when resources are manually removed from the database
+
+
     Design Changes:
-        My page for each restaurant doesn't show the ID's of each menu item, this is because I changed my data model, and it no longer has unique ID's for each item
-        Requesting JSON from "/restaurants" gives the the id's and names (not just id's) of each restaurant, this is necessary for my order page to work.
-        Instead of editing the restaurant in /restaurants/:id, the user does so in /restaurants/:id/edit
+        Users can set their privacy value on registration
+        Orders are submitted by posting to "/order/submit" to be consistent with the path to the order form: "/order"
