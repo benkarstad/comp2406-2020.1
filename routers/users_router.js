@@ -1,8 +1,12 @@
 const
 	express = require("express"),
 	mongo = require("mongodb"),
+	crypto = require("crypto"),
 
+	auth = require("../scripts/auth"),
 	status = require("../scripts/status"),
+	
+	secretKey = require("../secretKey"),
 
 	router = express.Router();
 
@@ -11,6 +15,10 @@ router.get("/profile", redirectToUser);
 router.use("/:_id", getUser);
 router.get("/:_id", getOrderHistory, respondProfile);
 router.get("/", respondUsers);
+router.post("/",
+	createUser,
+	auth.session.setToken,
+	status.send200);
 
 function updateProfile(request, response, next){
 	const
@@ -100,5 +108,40 @@ function respondUsers(request, response, next){
 			})
 		});
 }
+
+/**
+ * creates a new user and commits it to the database
+ * @param request
+ * @param response
+ * @param next
+ */
+function createUser(request, response, next){
+	response.app.locals.db.collections.users.findOne({username: request.body.username},
+		(err, user)=>{ //if the username is available, create a new user
+			if(user === null){
+				let {username, privacy, password } = request.body;
+				let salt = crypto.randomBytes(32).toString("hex"),
+					hashKey = auth.saltHash(secretKey, salt),
+					passwordHash = auth.saltHash(password, hashKey),
+					
+					newUser = {
+						username,
+						privacy,
+						salt,
+						passwordHash
+					};
+				
+				response.app.locals.db.collections.users.insertOne(newUser,{},
+					(err, newUser)=>{
+						response.locals.user = newUser.ops[0];
+						next();
+					});
+				
+			}else{ //if the username is taken, send a 409 error
+				return response.status(409).send();
+			}
+		})
+}
+
 
 module.exports = router;

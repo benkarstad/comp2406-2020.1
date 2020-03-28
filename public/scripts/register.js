@@ -26,7 +26,7 @@ function submitRegistration(){
 			}
 		}
 	};
-	xhttp.open("POST", "/register");
+	xhttp.open("POST", "/users");
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send(JSON.stringify(credentials));
 }
