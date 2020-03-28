@@ -33,6 +33,12 @@ function updateProfile(request, response, next){
 		.findOneAndUpdate({_id: response.locals.user._id}, {$set: maskedBody});
 }
 
+/**
+ * retrieves the data for the requested user and puts it in response.locals.userProfile
+ * @param request
+ * @param response
+ * @param next
+ */
 function getUser(request, response, next){
 	let _id;
 	try{
@@ -47,6 +53,13 @@ function getUser(request, response, next){
 		});
 }
 
+/**
+ * retrieves the order and puts it in response.locals.userProfile
+ *      (not to be confused with response.locals
+ * @param request
+ * @param response
+ * @param next
+ */
 function getOrderHistory(request, response, next){
 	response.app.locals.db.collections.orders.find({userId: response.locals.userProfile._id})
 		.sort({date: -1}).toArray().then((orders)=>{
@@ -55,6 +68,12 @@ function getOrderHistory(request, response, next){
 		})
 }
 
+/**
+ * responds with the requested user's profile, granted the client has permission to view it
+ * @param request
+ * @param response
+ * @param next
+ */
 function respondProfile(request, response, next){
 	if(response.locals.userProfile.privacy === false ||
 		(response.locals.user !== undefined && response.locals.userProfile.username === response.locals.user.username)){ //only show private accounts to that user
@@ -76,11 +95,23 @@ function respondProfile(request, response, next){
 	status.send404(request, response, next);
 }
 
+/**
+ * redirects the user to their own profile
+ * @param request
+ * @param response
+ * @param next
+ */
 function redirectToUser(request, response, next){
 	if(response.locals.user === undefined) response.redirect("/login");
 	response.redirect(`/users/${response.locals.user._id}`);
 }
 
+/**
+ * sends the client an HTML page with all public user's names
+ * @param request
+ * @param response
+ * @param next
+ */
 function respondUsers(request, response, next){
 	response.app.locals.db.collections.users.find({privacy: false}).toArray()
 		.then((users)=>{
