@@ -140,12 +140,36 @@ function verifyToken(request, response, next){
 		});
 }
 
+/**
+ *
+ * @param collection
+ */
+function cleanupSessions(collection){
+	collection.find({}).toArray()
+		.then(sessions=>{
+			for(let session in sessions){
+				session = sessions[session];
+				//verify that the token is still valid
+				let payload;
+				try{
+					//parse the session token
+					payload = jwt.verify(session.token, secretKey);
+				}catch(err){
+					//remove the token, if it's invalid
+					if(err instanceof jwt.JsonWebTokenError) collection.findOneAndDelete({token: session.token});
+					continue
+				}
+			}
+		})
+}
+
 module.exports = {
 	saltHash,
 	verifyHash,
 	session: {
 		setToken,
 		unsetToken,
-		verifyToken
+		verifyToken,
+		cleanupSessions
 	}
 };

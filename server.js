@@ -30,7 +30,10 @@ function init(){
 					orders: db.collection("orders"),
 					sessions: db.collection("sessions")
 				}
-			}
+			};
+
+			//at a regular interval, check the sessions collection for any expired sessions and remove them
+			setInterval(()=>auth.session.cleanupSessions(app.locals.db.collections.sessions), config.sessionCleanupInterval);
 		}
 	});
 
