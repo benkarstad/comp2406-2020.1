@@ -6,6 +6,8 @@
     "url": "mongodb://localhost:27017/",
     "name": "mealMobile"
   },
-  "sessionTimeout": "300000",
-  "sessionCleanupInterval": 10000
+  "sessions": {
+    "maxAge": "300000",
+    "cleanupInterval": 10000
+  }
 }

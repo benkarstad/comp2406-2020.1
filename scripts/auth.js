@@ -5,7 +5,7 @@ const
 
 	config = require("../serverconfig"),
 
-	sessionTimeout = config.sessionTimeout, //session length in milliseconds
+	sessionTimeout = config.sessions.maxAge, //session length in milliseconds
 	secretKey = require("../secretKey"),
 
 	hashAlgorithm = "sha512";

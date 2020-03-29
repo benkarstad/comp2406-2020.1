@@ -33,7 +33,7 @@ function init(){
 			};
 
 			//at a regular interval, check the sessions collection for any expired sessions and remove them
-			setInterval(()=>auth.session.cleanupSessions(app.locals.db.collections.sessions), config.sessionCleanupInterval);
+			setInterval(()=>auth.session.cleanupSessions(app.locals.db.collections.sessions), config.sessions.cleanupInterval);
 		}
 	});
 
