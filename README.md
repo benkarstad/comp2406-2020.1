@@ -1,4 +1,5 @@
-COMP 2406A assignment 3 Submission:
+# COMP 2406A assignment 3 Submission:
+```
     Included Files:
     .
     │   database-initializer.js
@@ -68,35 +69,48 @@ COMP 2406A assignment 3 Submission:
                 _header.njk
                 _skeleton.njk
                 _userAuthForm.njk
+```
 
-    Execution Instructions:
-        Ensure the .db property in serverconfig.json is correct
-        Ensure that the database has the following collections:
-            users
-            restaurants
-            orders
-            sessions
+#### Execution Instructions:
+1) Ensure the .db property in serverconfig.json is correct
+2) Ensure that the database has the following collections:
+    * users
+    * restaurants
+    * orders
+    * sessions
 
-        commands:
-            ./init.bat      #first time set-up
-            ./server.bat    #starts a server instance
+3) commands:
+    
+    `./init.bat` first time set-up
+    
+    `./server.bat` starts a server instance
 
-        a new command prompt will open for the server instance
-        navigate to "localhost:3000/" in the Google Chrome browser
+    a new command prompt will open for the server instance,
+    navigate to "localhost:3000/" in the Google Chrome browser
 
-        NOTE: If init.bat is not functioning, try importing the data manually from
-                users.json and restaurants.json, then running "node resetPasswords.js"
-
-
-    Notes/Additional Features:
-        User passwords are stored salted and hashed, and salts are encrypted with a master secretKey
-        Sessions are established and validated with JSON Web Tokens (https://www.npmjs.com/package/jsonwebtoken)
-        Project makes use of Google's Material Icons Library (https://www.google.com/design/icons/)
-        *.njk files are Nunjucks templates (https://mozilla.github.io/nunjucks/)
-
-        WARNING: Project may behave unpredictably when resources are manually removed from the database
+    **NOTE:** If init.bat is not functioning, try importing the data manually from
+            users.json and restaurants.json, then running "node resetPasswords.js"
 
 
-    Design Changes:
-        Users can set their privacy value on registration
-        Orders are submitted by posting to "/order/submit" to be consistent with the path to the order form: "/order"
+#### Notes/Additional Features:
+User passwords are stored salted and hashed,
+and salts are encrypted with a master secretKey
+
+Sessions are established and validated with JSON Web Tokens
+(https://www.npmjs.com/package/jsonwebtoken)
+
+Project makes use of Google's Material Icons Library
+(https://www.google.com/design/icons/)
+
+*.njk files are Nunjucks templates
+(https://mozilla.github.io/nunjucks/)
+
+**WARNING:** Project may behave unpredictably
+when resources are manually removed from the database
+
+
+#### Design Changes:
+Users can set their privacy value on registration
+
+Orders are submitted by posting to "/order/submit"
+to be consistent with the path to the order form: "/order"
