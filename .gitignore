@@ -5,6 +5,7 @@
 .idea
 node_modules
 data/db
+mongodb
 
 
 !README.txt

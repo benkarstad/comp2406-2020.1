@@ -79,7 +79,7 @@
     * orders
     * sessions
 
-3) commands:
+3) Commands:
     
     `./init.bat` first time set-up
     
